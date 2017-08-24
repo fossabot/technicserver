@@ -4,7 +4,6 @@ deploy:
   provider: releases
   api_key:
     secure: S1Ljf4Je1EU/k79N2GDzupOS5VdplHR5N5qlgd6jXJmeeOxMYv15A6Vt67yZV1lnX2hLhnw8rdAqk82Ok1fEl7Se+b/L8uCMIrQDZ6qEXo9eJkhE32Od04+qXrmUKU5B+aocRi+oAWKjV25Yo0J7BAu4XL4qbF6SNnyu6MLmX2tF09ms+HCS+FC+vAF/dFC45Wr2BhvgYDCoJOX2Bb1DPi6+iXFywoFBFptuBP6Y0WAcWKFZKp1SoeC22HqNqL8pORm3Japv29n16yx/jp9nFHi8MXdLtgHKQNrRJfmszToj3Ua1gu6/2lHGzIbCflLSGIgDPXJZ6lZavPO5YE9YoiONAvaqOVJ3EWZ/QdHbXdfkmdXL14R1QugJ5cVL0HciDlUAllnLl7KTx7xBE8TDKBNZ5OeBgaWV3ZbLkv2qCEHxPXmhcgFj9oLrpPr8y32TTBQKkDGFxmb0CAzuG682U+SQwX+rRQN4ULGNZIWPWlcbLj/UWj39/QdnXc3QqVaAfB29nW3UKVshgBCOgSvgkQVBGDcydW1dpmMe+HCLDYfh7Xzi5kGALa8BPTRScEsFekYZrOFMM7CCjt4uP6R6kbOVNXjM8dAbmptxGiE8NdJ3FkFpaLKQeDzLsiko5USdjn/AL0I+HfVKkygvxkjy/uCbAuen2TKndoe9JfzYxlA=
-  file_glob: true
-  file: build/libs/technicserver-all-*.jar
+  file: build/libs/technicserver-all-1.0-SNAPSHOT.jar
   on:
     repo: bennet0496/technicserver
