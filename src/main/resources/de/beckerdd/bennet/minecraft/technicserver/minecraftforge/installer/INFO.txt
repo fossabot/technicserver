@@ -1,0 +1,4 @@
+This Project contains the Refractored Minecraft Forge Installer to work with this Project.
+
+Original Source was taken from
+  https://github.com/MinecraftForge/Installer/tree/8175069d02eae6a52b921969f6c673dab6dc3774
