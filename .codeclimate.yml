@@ -4,10 +4,9 @@ engines:
     enabled: true
   pmd:
     enabled: true
-  git-legal:
-    enabled: true
+    channel: "beta"
   checkstyle:
-    enabled: true
+    enabled: "true"
 ratings:
   paths:
   - src/main/java/**
