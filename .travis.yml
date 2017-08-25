@@ -13,7 +13,12 @@ cache:
     - $HOME/.gradle/wrapper/
 jobs:
   include:
+    - stage: build
+      script:
+      - ./gradlew check
+      - ./gradlew fatJar
     - stage: test
+      language: java
       script: ./test_integration.sh zip
     - script: ./test_integration.sh solder
     - stage: deploy
