@@ -33,6 +33,7 @@ public class Config {
     private String url;
     private String build;
     private boolean autoupdate;
+    private boolean disableAnalytics;
     private List<String> javaArgs;
 
     private Config(){
@@ -40,11 +41,11 @@ public class Config {
             FileInputStream input = new FileInputStream("modpack.properties");
 
             // load a properties file
-            Properties prop = new Properties();
-            prop.load(input);
-            url = prop.getProperty("url");
-            build = prop.getProperty("build");
-            switch (prop.getProperty("autoupdate")){
+            Properties properties = new Properties();
+            properties.load(input);
+            url = properties.getProperty("url");
+            build = properties.getProperty("build");
+            switch (properties.getProperty("autoupdate")){
                 case "true":
                 case "True":
                 case "yes":
@@ -55,7 +56,18 @@ public class Config {
                     autoupdate = false;
 
             }
-            javaArgs = Arrays.asList(prop.getProperty("javaArgs", "").split(" "));
+            switch (properties.getProperty("disableAnalytics", "false")){
+                case "true":
+                case "True":
+                case "yes":
+                case "Yes":
+                case "1":
+                    disableAnalytics = true;
+                default:
+                    disableAnalytics = false;
+
+            }
+            javaArgs = Arrays.asList(properties.getProperty("javaArgs", "").split(" "));
         }catch (IOException io){
             io.printStackTrace();
             Logging.logErr("Failed to load Config. Exiting!");
@@ -77,6 +89,10 @@ public class Config {
 
     public static List<String> getJavaArgs() {
         return instance.javaArgs;
+    }
+
+    public static boolean isDisableAnalytics() {
+        return instance.disableAnalytics;
     }
 
     public static void reload(){

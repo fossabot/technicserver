@@ -1,16 +1,16 @@
 package de.beckerdd.bennet.minecraft.technicserver;
 
 import de.beckerdd.bennet.minecraft.technicserver.Helper.Logging;
+import org.piwik.java.tracking.CustomVariable;
+import org.piwik.java.tracking.PiwikRequest;
+import org.piwik.java.tracking.PiwikTracker;
 
 import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 
 /**
@@ -59,14 +59,34 @@ public class Main {
                 System.exit(1);
             }
 
-            TechnicAPI technic = new TechnicAPI(Config.getUrl());
-            if(technic.getModpack().getState() != Modpack.State.INSTALLED_UPTODATE) {
+            PiwikRequest piwikRequest = new PiwikRequest(2, new URL("http://technicserver.minecraft.bennet.becker-dd.de/java"));
+            PiwikTracker piwikTracker = new PiwikTracker("https://piwik.becker-dd.de/piwik.php");
+            if(!Config.isDisableAnalytics()) {
+                if (Main.class.getPackage().getImplementationVersion() != null) {
+                    piwikRequest.addCustomTrackingParameter("implementation-version", Main.class.getPackage().getImplementationVersion());
+                    piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", Main.class.getPackage().getImplementationVersion()), 1);
+                } else {
+                    piwikRequest.addCustomTrackingParameter("implementation-version", "DEBUG-RUN");
+                    piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", "DEBUG-RUN"), 1);
+                }
+                piwikRequest.addCustomTrackingParameter("modpack-url", Config.getUrl());
+                piwikRequest.setPageCustomVariable(new CustomVariable("modpack-url", Config.getUrl()), 2);
+                piwikRequest.addCustomTrackingParameter("modpack-desired-version", Config.getBuild());
+                piwikRequest.setPageCustomVariable(new CustomVariable("modpack-desired-version", Config.getBuild()), 3);
+                piwikRequest.addCustomTrackingParameter("modpack-autoupdate", Config.isAutoupdate());
+                piwikRequest.setPageCustomVariable(new CustomVariable("modpack-autoupdate", Config.isAutoupdate() ? "true" : "false"), 4);
+            }
+            Date start = new Date();
+
+            TechnicAPI technicAPI = new TechnicAPI(Config.getUrl());
+
+            if(technicAPI.getModpack().getState() != Modpack.State.INSTALLED_UPTODATE) {
                 if(Config.isAutoupdate() ||
                         Arrays.stream(args).anyMatch(a -> a.equalsIgnoreCase("update"))||
-                        technic.getModpack().getState() == Modpack.State.NOT_INSTALLED){
-                    technic.downloadAndInstallModpack();
-                    technic.convertServer();
-                    technic.cleanClientMods();
+                        technicAPI.getModpack().getState() == Modpack.State.NOT_INSTALLED){
+                    technicAPI.downloadAndInstallModpack();
+                    technicAPI.convertServer();
+                    technicAPI.cleanClientMods();
                 }else{
                     Logging.log(Logging.ANSI_RED + Logging.ANSI_YELLOW_BACKGROUND + "MODPACK UPDATE AVAILABLE, BUT AUTOUPDATE IS DISABLED. START WITH \"update\" AS PARAMETER OR SET AUTOUPDATE TO \"yes\"" + Logging.ANSI_RESET);
                     Logging.logDebug("sleeping 5 sec.");
@@ -75,30 +95,35 @@ public class Main {
             }else{
                 Logging.log("Modpack is upto-date");
             }
-            technic.saveState();
 
-            //Logging.kill();
+            technicAPI.saveState();
 
-            ArrayList<String> arguments = new ArrayList<>();
-            arguments.add("java");
-            //arguments.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
-            arguments.addAll(Config.getJavaArgs());
-            arguments.add("-jar");
-            arguments.add("modpack.jar");
-            //arguments.addAll(Arrays.asList(args));
-            arguments.add("nogui");
-            ProcessBuilder pb = new ProcessBuilder(arguments);
-            pb.redirectErrorStream(true);
-            pb.directory(new File("."));
-            //System.out.println("Directory: " + pb.directory().getAbsolutePath());
-            pb.inheritIO();
-            Process p = pb.start();
-            /*InputStream is = p.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            for (String line = br.readLine(); line != null; line = br.readLine()) {
-                System.out.println( line ); // Or just ignore it
-            }*/
-            p.waitFor();
+            if(!Config.isDisableAnalytics()) {
+                double end = (start.getTime() - (new Date()).getTime()) / 1000 % 60;
+                piwikRequest.addCustomTrackingParameter("modpack-name", technicAPI.getModpack().getDescription());
+                piwikRequest.setPageCustomVariable(new CustomVariable("modpack-name", technicAPI.getModpack().getDescription()), 5);
+                piwikRequest.addCustomTrackingParameter("modpack-setuptime", Double.toString(end));
+                piwikRequest.setPageCustomVariable(new CustomVariable("modpack-setuptime", Double.toString(end)), 6);
+
+                piwikTracker.sendRequest(piwikRequest);
+            }
+
+
+            ArrayList<String> modpackStartArguments = new ArrayList<>();
+            modpackStartArguments.add("java");
+            modpackStartArguments.addAll(Config.getJavaArgs());
+            modpackStartArguments.add("-jar");
+            modpackStartArguments.add("modpack.jar");
+            modpackStartArguments.add("nogui");
+
+            ProcessBuilder modpackProcessTpl = new ProcessBuilder(modpackStartArguments);
+            modpackProcessTpl.redirectErrorStream(true);
+            modpackProcessTpl.directory(new File("."));
+            modpackProcessTpl.inheritIO();
+
+            Process modpackProcess = modpackProcessTpl.start();
+            modpackProcess.waitFor();
+
         }catch (Exception e){
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
