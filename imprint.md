@@ -5,7 +5,7 @@ title: Impressum
 
 ## Angaben nach §5 Telemediengesetz
 
-Bennet Becker
+Bennet Becker  
 Dresden
 
 ### Kontakt
