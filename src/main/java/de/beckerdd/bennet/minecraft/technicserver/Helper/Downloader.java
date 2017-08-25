@@ -59,7 +59,7 @@ public class Downloader {
         }
         bout.close();
         in.close();
-        System.out.println();
+        //System.out.println();
     }
     public static void downloadFile(String url, String path) throws IOException {
         downloadFile(new URL(url), path);
