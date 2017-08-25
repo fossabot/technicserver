@@ -100,8 +100,8 @@ public class Main {
 
             if(!Config.isDisableAnalytics()) {
                 double end = (start.getTime() - (new Date()).getTime()) / 1000 % 60;
-                piwikRequest.addCustomTrackingParameter("modpack-name", technicAPI.getModpack().getDescription());
-                piwikRequest.setPageCustomVariable(new CustomVariable("modpack-name", technicAPI.getModpack().getDescription()), 5);
+                piwikRequest.addCustomTrackingParameter("modpack-name", technicAPI.getModpack().getDisplayName());
+                piwikRequest.setPageCustomVariable(new CustomVariable("modpack-name", technicAPI.getModpack().getDisplayName()), 5);
                 piwikRequest.addCustomTrackingParameter("modpack-setuptime", Double.toString(end));
                 piwikRequest.setPageCustomVariable(new CustomVariable("modpack-setuptime", Double.toString(end)), 6);
 
