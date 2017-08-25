@@ -304,15 +304,17 @@ public class Modpack implements Serializable{
             });
             buildInstalled = solder.parseBuild(Config.getBuild(), this);
         }else {
-            modFiles.get("package").parallelStream().forEach(fn -> {
-                try {
-                    Logging.logDebug("Deleting " + fn);
-                    FileUtils.forceDelete(new File(fn));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Logging.logErr("could not delete " + fn);
-                }
-            });
+            if(state == State.INSTALLED_UPDATEABLE) {
+                modFiles.get("package").parallelStream().forEach(fn -> {
+                    try {
+                        Logging.logDebug("Deleting " + fn);
+                        FileUtils.forceDelete(new File(fn));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Logging.logErr("could not delete " + fn);
+                    }
+                });
+            }
             Downloader.downloadFile(url, "cache/package.zip");
             buildInstalled = version;
         }
