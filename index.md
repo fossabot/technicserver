@@ -1,4 +1,3 @@
-{% include piwik-analytics.html %}
 # Technicserver
 run modpacks from technicpack.net as server with ease
 

@@ -1,3 +1,6 @@
+---
+title: Impressum
+---
 # Imprint (DE Only)
 
 ## Angaben nach §5 Telemediengesetz
