@@ -1,0 +1,73 @@
+---
+---
+
+@import 'jekyll-theme-cayman';
+
+.menu__hover{
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.menu__hover:before, .menu__hover:after,
+.menu__hover__label:before, .menu__hover__label:after{
+  content: "";     
+  position: absolute;   
+  transition: transform .2s ease-out;
+}
+
+.menu__hover:before, .menu__hover:after{
+  width: 100%;
+  height: 2px;
+  left: 0;
+}
+
+.menu__hover:before{
+  top: 0;
+  transform: translate3d(-105%, 0, 0);
+}
+
+.menu__hover:after{
+  bottom: 0;
+  transform: translate3d(105%, 0, 0);
+}
+
+.menu__hover__label:before,
+.menu__hover__label:after{
+  width: 2px;
+  height: 100%;
+  top: 0;
+}
+
+.menu__hover__label:before{
+  left: 0;
+  transform: translate3d(0%, -100%, 0);
+}
+
+.menu__hover__label:after{
+  right: 0;
+  transform: translate3d(0%, 100%, 0);
+}
+
+.menu__hover:hover:before, .menu__hover:focus:before,
+.menu__hover:hover:after, .menu__hover:focus:after,
+.menu__hover:hover .menu__hover__label:before, .menu__hover:focus .menu__hover__label:before,
+.menu__hover:hover .menu__hover__label:after, .menu__hover:focus .menu__hover__label:after{
+  transform: translate3d(0, 0, 0);
+}
+
+
+.menu__item{
+  display: inline-block;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.menu__link{
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
