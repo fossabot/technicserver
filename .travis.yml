@@ -1,16 +1,15 @@
 language: java
 os: linux
-script:
-- ./gradlew assemble
-- ./gradlew check
-- ./gradlew fatJar
+
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
 jobs:
   include:
     - stage: build
@@ -18,11 +17,14 @@ jobs:
       - ./gradlew check
       - ./gradlew fatJar
     - stage: test
-      language: java
-      script: ./test_integration.sh zip
-    - script: ./test_integration.sh solder
+      script:
+      - ./gradlew fatJar
+      - ./test_integration.sh zip
+    - script:
+      - ./gradlew fatJar
+      - ./test_integration.sh solder
     - stage: deploy
-      script: skip
+      script: ./gradlew fatJar
       deploy: &releases
         provider: releases
         api_key:
