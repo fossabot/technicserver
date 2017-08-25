@@ -80,7 +80,7 @@ public class Solder implements Serializable {
             }
             modpack.overrideMinecraft(obj.getString("minecraft"));
             for (JsonValue j: obj.getJsonArray("mods")) {
-                JsonObject o = j.asJsonObject();
+                JsonObject o = (JsonObject)j;
                 modpack.addMod(
                         new Mod(
                                 o.getString("name"),
