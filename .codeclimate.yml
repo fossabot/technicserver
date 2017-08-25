@@ -7,6 +7,7 @@ engines:
     channel: "beta"
   checkstyle:
     enabled: "true"
+    channel: "beta"
 ratings:
   paths:
   - src/main/java/**
