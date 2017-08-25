@@ -17,8 +17,8 @@
 	  <center>
 	  <p>
 	  <a href="https://travis-ci.org/{{ site.github.repository_nwo }}"><img src="https://img.shields.io/travis/{{ site.github.repository_nwo }}.svg?style=flat-square" alt="Travis" /></a>
-	  <a href="{{ site.github.license.url }}"><img src="https://img.shields.io/badge/License-{{site.github.license.spdx_id}}-blue.svg?style=flat-square" alt="License: {{site.github.license.spdx_id}}" /></a>
-	  <a href="{{ site.github.releases_url }}"><img src="https://img.shields.io/github/downloads/{{ site.github.repository_nwo }}.svg?style=flat-square" /></a>
+	  <a href="{{ site.github.license.url }}"><img src="https://img.shields.io/badge/License-{{ site.github.license.spdx_id | replace: '-', ' '}}-blue.svg?style=flat-square" alt="License: {{site.github.license.spdx_id}}" /></a>
+	  <a href="{{ site.github.releases_url }}"><img src="https://img.shields.io/github/downloads/{{ site.github.repository_nwo }}/latest/total.svg?style=flat-square" /></a>
 	  </p>
 	  </center>
       {% if site.github.is_project_page %}
