@@ -10,7 +10,7 @@ Currently you can **only** run Modpacks using the [Forge Modloader](https://file
 
 You are only able to use this Software with shared Gameserver Hosters, if they support custom Minecraft JAR-File, Custom Java Commandlines and if they allow running two Java Processes simultaneously. The Wrapper adds an Runtime Overhead of about 200MB RAM.
 
-
+Please keep in mind, this project is neighter an offical "Technicpack"/"Technic Platform" (copyrighted by Syndicate LLC) project nor it is an offical Minecraft (copyrighted by Mojang AB) project. Therefore this project is neither affiliated with these companies nor it has special permission.
 
 ## Quick start
 
