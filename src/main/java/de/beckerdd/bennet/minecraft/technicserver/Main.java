@@ -40,7 +40,7 @@ public class Main {
 
     /**
      * Main entry Point.
-     * @param args
+     * @param args Commandline Arguments
      */
     public static void main(String[] args) {
 

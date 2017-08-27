@@ -22,7 +22,10 @@ import java.io.Serializable;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//TODO
+/**
+ * for now unused class only completly reading API JSON
+ * TODO give this a function :)
+ */
 public class Discord implements Serializable{
     public Discord(String discordServerId) {
 

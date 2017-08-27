@@ -36,6 +36,10 @@ import java.util.stream.Collectors;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Class representing the Modpack inside the API
+ */
 public class Modpack implements Serializable{
     //region private Fields - API
     private int id;
@@ -70,6 +74,11 @@ public class Modpack implements Serializable{
     private State state;
     private String buildInstalled;
 
+    /**
+     * Parse Modpack from JSON Stream
+     * @param jsonStream API JSON to Parse
+     * @throws IOException Parsing Failed
+     */
     public Modpack(InputStream jsonStream) throws IOException {
         state = State.NOT_INSTALLED;
         Logging.log("Initializing Modpack from JSON InputStream");
@@ -92,6 +101,11 @@ public class Modpack implements Serializable{
         Logging.log("Identified Modpack '" + displayName + "' (" + name + ") by " + user);
     }
 
+    /**
+     * Initializies internal fields. called by {@link #Modpack(InputStream)}
+     * @param obj JSON object to parse from.
+     * @throws MalformedURLException URLs inside JSON are Malformed
+     */
     private void initSome(JsonObject obj) throws MalformedURLException {
         Logging.log("Initializing Modpack from JSON Object");
 
@@ -234,11 +248,21 @@ public class Modpack implements Serializable{
         this.minecraft = new MinecraftVerion(minecraft);
     }
 
+    /**
+     * Add a mod to the internal List
+     * @param mod Mod to add
+     * @return this #SyntacticSugar
+     */
     public Modpack addMod(Mod mod) {
         mods.add(mod);
         return this;
     }
 
+    /**
+     * Download all Modpack files (Mods)
+     * @return this
+     * @throws IOException Download Failed due to source or destination unavailability
+     */
     public Modpack downloadAll() throws IOException {
         FileUtils.forceMkdir(new File("cache/"));
         if(solder != null){
@@ -321,6 +345,11 @@ public class Modpack implements Serializable{
         return this;
     }
 
+    /**
+     * Extract all downloaded Mod ZIPs. Must be called after {@link #downloadAll()}
+     * @return this
+     * @throws IOException Source File or Destination Path are unreadable/writeable
+     */
     public Modpack extractAll() throws IOException {
         if(solder != null){
             mods.parallelStream().forEach(mod -> {
@@ -343,6 +372,11 @@ public class Modpack implements Serializable{
         return this;
     }
 
+    /**
+     * Check and Update the internal State. Called by {@Link TechnicAPI#main(String[])} when modpack.state file found
+     * @param jsonStream Current JSOn from the API
+     * @throws IOException fired by Malformed URLs
+     */
     public void update(InputStream jsonStream) throws IOException {
         if(state == null || state == State.NOT_INSTALLED)
             throw new IllegalStateException();
@@ -356,6 +390,9 @@ public class Modpack implements Serializable{
         }
     }
 
+    /**
+     * Internal State Hack :)
+     */
     public enum State implements Serializable{
         NOT_INSTALLED,
         INSTALLED_UPTODATE,
