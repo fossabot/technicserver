@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JAVA_FILES=$(find . -type f -iname *.java -print0 | tr '\0' ' ')
+JAVA_FILES=$(find ./src/ -type f -iname *.java -print0 | tr '\0' ' ')
 CLASSES=$(find $HOME/.gradle/caches/ -type f -iname *.jar -print0 | tr '\0' ';')
 PWD=$(pwd)
 
