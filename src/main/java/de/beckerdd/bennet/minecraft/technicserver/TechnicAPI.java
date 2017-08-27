@@ -33,9 +33,22 @@ import java.util.jar.JarFile;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Controller for the TechnicAPI / Technic Platform
+ */
 public class TechnicAPI {
+    /**
+     * The API contained Modpack
+     */
     private Modpack modpack;
 
+    /**
+     * Read the API by it's URL
+     * @param apiUrl API Url to the Modpack. Must be a http://api.technicpack.net/modpack/... Link
+     * @throws IOException URL is unreachable
+     * @throws MalformedURLException URL is Malformed
+     */
     public TechnicAPI(String apiUrl) throws IOException {
         File state;
 
@@ -69,6 +82,10 @@ public class TechnicAPI {
         }
     }
 
+    /**
+     * Try to Install the Modpack
+     * @throws IOException installation failed at some Point
+     */
     public void downloadAndInstallModpack() throws IOException {
         modpack.downloadAll().extractAll();
         try{
@@ -79,6 +96,10 @@ public class TechnicAPI {
         }
     }
 
+    /**
+     * Convert the Client Modpack to a Server Compatible one, by installing the Forge ModLoader
+     * @throws IOException
+     */
     public void convertServer() throws IOException {
         URL url = new URL(
                 "jar:file:" + Paths.get("").toAbsolutePath() + "/bin/modpack.jar!/version.json");
@@ -99,6 +120,9 @@ public class TechnicAPI {
         }
     }
 
+    /**
+     * Delete Client-Only Mods which may cause trouble with the Server
+     */
     public void cleanClientMods() {
         for(File child : new File("mods/").listFiles()){
             if(ClientMod.isClientMod(child.getName())){
@@ -116,10 +140,19 @@ public class TechnicAPI {
         }
     }
 
+    /**
+     * modpack getter
+     * @return modpack
+     */
     public Modpack getModpack() {
         return modpack;
     }
 
+    /**
+     * Save the current state of the Modpack by Searlizing it.
+     * HACK
+     * @throws IOException Serailization Failed :(
+     */
     public void saveState() throws IOException {
         File stateDB = new File("modpack.state");
         FileOutputStream fos = new FileOutputStream(stateDB);

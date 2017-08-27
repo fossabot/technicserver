@@ -24,7 +24,17 @@ import java.util.zip.ZipInputStream;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Static class for Extracting ZIP Files
+ */
 public class Extractor {
+    /**
+     * Extract a ZIP Stream
+     * @param fis FileInputStream to the File
+     * @return the Set of Files (not Folders) extracted
+     * @throws IOException Input or Output not readable/writeable
+     */
     public static HashSet<String> extractZip(FileInputStream fis) throws IOException {
         HashSet<String> files = new HashSet<>();
         int BUFFER = 2048;
@@ -56,6 +66,13 @@ public class Extractor {
         zis.close();
         return files;
     }
+
+    /**
+     * Extract ZIP by Filename
+     * @param filename Path to the ZIP File
+     * @return the Set of Files (not Folders) extracted
+     * @throws IOException Input or Output not readable/writeable
+     */
     public static HashSet<String> extractZip(String filename) throws IOException {
         return extractZip(new FileInputStream(filename));
     }

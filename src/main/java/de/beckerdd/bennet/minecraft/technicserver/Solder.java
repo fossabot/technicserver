@@ -31,9 +31,19 @@ import java.net.URLConnection;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Represents the Solder API
+ */
 public class Solder implements Serializable {
+    /**
+     * URL of the Solder installtion
+     */
     private String url;
 
+    /**
+     * Mirror URL for files
+     */
     private String mirror_url;
 
     public Solder(String solder) throws IOException {

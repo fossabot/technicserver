@@ -27,11 +27,27 @@ import java.util.TimeZone;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Singelton for Logging Purposes
+ */
 public class Logging {
+    /**
+     * Singelton Instance
+     */
     private static Logging instance = new Logging();
 
+    /**
+     * the Logfile
+     */
     private PrintWriter fileWriter;
+    /**
+     * Original Std Out form System.out - will be hijacked in CTOR
+     */
     private PrintStream stdOut = System.out;
+    /**
+     * Original Std Err form System.err - will be hijacked in CTOR
+     */
     private PrintStream stdErr = System.err;
 
     public static final String ANSI_RESET = "\u001B[0m";
@@ -55,6 +71,9 @@ public class Logging {
 
     //private final String timezone = TimeZone.getDefault().getID();
 
+    /**
+     * Private Singelton Constructor, setting up Logging
+     */
     private Logging(){
         String timestamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
 
@@ -71,10 +90,15 @@ public class Logging {
             e.printStackTrace();
             System.exit(1);
         }
+        //Hijack STDOUT and STDERR :)
         System.setOut(new LoggingStream(stdOut, false));
         System.setErr(new LoggingStream(stdOut, true));
     }
 
+    /**
+     * Log a Message to STDOUT
+     * @param logString Log Message
+     */
     public static void log(String logString){
         String caller = Thread.currentThread().getStackTrace()[2].getClassName();
         if(caller.equals(LoggingStream.class.getName())){
@@ -88,6 +112,10 @@ public class Logging {
         instance.fileWriter.println(logme);
     }
 
+    /**
+     * Log a Message to STDERR
+     * @param logString Log Message
+     */
     public static void logErr(String logString){
         String caller = Thread.currentThread().getStackTrace()[2].getClassName();
         if(caller.equals(LoggingStream.class.getName())){
@@ -101,6 +129,10 @@ public class Logging {
         instance.fileWriter.println(logme);
     }
 
+    /**
+     * Log a Debug Message
+     * @param logString Log Message
+     */
     public static void logDebug(String logString) {
         String caller = Thread.currentThread().getStackTrace()[2].getClassName();
         if(caller.equals(LoggingStream.class.getName())){
@@ -116,16 +148,27 @@ public class Logging {
         }
     }
 
+    /**
+     * Kill the Logging Singelton -  can't undone
+     */
     public static void kill() {
         System.setOut(instance.stdOut);
         System.setErr(instance.stdErr);
         instance = null;
     }
 
+    /**
+     * Print a plain Message with out "decoration"
+     * @param s String to print
+     */
     public static void plainPrint(String s) {
         instance.stdOut.print(s);
     }
 
+    /**
+     * Print a plain Message with out "decoration" and a newline
+     * @param s String to print
+     */
     public static void plainPrintln(String s) {
         instance.stdOut.println(s);
     }

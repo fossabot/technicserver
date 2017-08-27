@@ -23,9 +23,24 @@ import java.util.regex.Pattern;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Represent the Minecraft Version in very fancy manner
+ */
 public class MinecraftVerion implements Serializable{
+    /**
+     * Major Version part. E.g. 7 if MC Version is 1.7.X
+     */
     private int major;
+    /**
+     * Minor Version part. E.g. 10 if MC Version is 1.7.10
+     */
     private int minor;
+
+    /**
+     * Setup this very fancy class
+     * @param versionString original version string such as "1.7.10"
+     */
     public MinecraftVerion(String versionString){
         String[] ver = versionString.split(Pattern.quote("."));
         if(ver.length > 3 || ver.length < 2){
@@ -39,14 +54,26 @@ public class MinecraftVerion implements Serializable{
         }
     }
 
+    /**
+     * major getter
+     * @return major
+     */
     public int getMajor() {
         return major;
     }
 
+    /**
+     * minor getter
+     * @return minor
+     */
     public int getMinor() {
         return minor;
     }
 
+    /**
+     * give back the "original" version String
+     * @return version string
+     */
     @Override public String toString(){
         if(minor != 0)
             return "1." + major + "." + minor;

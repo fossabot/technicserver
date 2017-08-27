@@ -26,7 +26,17 @@ import java.net.URL;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Static Class for handling Downloads
+ */
 public class Downloader {
+    /**
+     * Download a File
+     * @param url URL to the File
+     * @param path Destination Path
+     * @throws IOException throws if file not downloadable or destination not writeable
+     */
     public static void downloadFile(URL url, String path) throws IOException {
         HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
         long completeFileSize = httpConnection.getContentLength();
@@ -61,9 +71,26 @@ public class Downloader {
         in.close();
         //System.out.println();
     }
+
+    /**
+     * Download a File
+     * @param url URL to the File
+     * @param path Destination Path
+     * @throws IOException throws if file not downloadable or destination not writeable
+     * @throws java.net.MalformedURLException URL was malformed
+     */
     public static void downloadFile(String url, String path) throws IOException {
         downloadFile(new URL(url), path);
     }
+
+    /**
+     * Download a File and check it's MD5 sum
+     * @param url URL to the File
+     * @param path Destination
+     * @param md5 expected MD5
+     * @throws IOException throws if file not downloadable or destination not writeable
+     * @throws DownloadException Md5 Missmatches
+     */
     public static void downloadFile(URL url, String path, String md5) throws IOException {
         downloadFile(url, path);
         FileInputStream fis = new FileInputStream(new File(path));
@@ -71,6 +98,16 @@ public class Downloader {
             throw new DownloadException("MD5 sum missmatch");
         }
     }
+
+    /**
+     * Download a File and check it's MD5 sum
+     * @param url URL to the File
+     * @param path Destination
+     * @param md5 expected MD5
+     * @throws IOException throws if file not downloadable or destination not writeable
+     * @throws java.net.MalformedURLException URL was malformed
+     * @throws DownloadException Md5 Missmatches
+     */
     public static void downloadFile(String url, String path, String md5) throws IOException {
         downloadFile(new URL(url), path, md5);
     }

@@ -32,8 +32,16 @@ import java.util.*;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Main Class. Containing the Programs entry point
+ */
 public class Main {
 
+    /**
+     * Main entry Point.
+     * @param args
+     */
     public static void main(String[] args) {
 
         Logging.plainPrintln("technicserver  Copyright (C) 2017  Bennet Becker <bennet@becker-dd.de>\n" +

@@ -22,7 +22,14 @@ import java.util.Set;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Static Class for detecting a "Client Mod" by it's ZIP Name
+ */
 public class ClientMod {
+    /**
+     * Set of Strings with Client Mod name Regualar Expressions
+     */
     private static Set<String> clientModRegex = new HashSet<String>(){{
         add("^[lL]ite[lL]oader.*jar$");
         add("^.*litemod$");
@@ -39,6 +46,12 @@ public class ClientMod {
         add("^SoundFilters.*jar$");
         add("^ShadersModCore-.*jar");
     }};
+
+    /**
+     * Check weather the Mod supplied by it's Name matches the known Client Mods
+     * @param name Mod Zip Name
+     * @return weather a Client mod was supplied
+     */
     public static boolean isClientMod(String name){
         return clientModRegex.stream().anyMatch(name::matches);
     }

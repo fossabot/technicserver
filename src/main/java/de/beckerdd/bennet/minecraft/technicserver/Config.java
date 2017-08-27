@@ -28,14 +28,39 @@ import java.util.Properties;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Singelton for Reading modpack.properties
+ */
 public class Config {
+    /**
+     * Singelton Instance
+     */
     private static Config instance = new Config();
+    /**
+     * Parameter from propertiers File
+     */
     private String url;
+    /**
+     * Parameter from propertiers File
+     */
     private String build;
+    /**
+     * Parameter from propertiers File
+     */
     private boolean autoupdate;
+    /**
+     * Parameter from propertiers File
+     */
     private boolean disableAnalytics;
+    /**
+     * Parameter from propertiers File
+     */
     private List<String> javaArgs;
 
+    /**
+     * Private Singelton Constructor. Reading File and setting up Singelton
+     */
     private Config(){
         try {
             FileInputStream input = new FileInputStream("modpack.properties");
@@ -75,26 +100,49 @@ public class Config {
         }
     }
 
+    /**
+     * autoupdate property getter
+     * @return autoupdate
+     */
     public static boolean isAutoupdate() {
         return instance.autoupdate;
     }
 
+    /**
+     * build property getter
+     * @return build
+     */
     public static String getBuild() {
         return instance.build;
     }
 
+    /**
+     * url property getter
+     * @return url
+     */
     public static String getUrl() {
         return instance.url;
     }
 
+    /**
+     * javaArgs property getter
+     * @return javaArgs
+     */
     public static List<String> getJavaArgs() {
         return instance.javaArgs;
     }
 
+    /**
+     * disableAnalytics property getter
+     * @return disableAnalytics
+     */
     public static boolean isDisableAnalytics() {
         return instance.disableAnalytics;
     }
 
+    /**
+     * Reread Config
+     */
     public static void reload(){
         instance = new Config();
     }

@@ -23,6 +23,9 @@ jobs:
     - script:
       - ./gradlew fatJar
       - ./test_integration.sh solder
+    - stage: javadoc
+      script:
+      - ./build_javadoc.sh
     - stage: deploy
       script: ./gradlew fatJar
       deploy: &releases
