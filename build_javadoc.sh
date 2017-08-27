@@ -14,8 +14,11 @@ javadoc -locale en_US -private -splitindex -use -author -version $JAVA_FILES \
 pushd .
 cd ../technicserver-gh-pages
 pwd
-git add -A docs/javadoc
+git status
+git add docs/javadoc
+git status
 git commit -am "Travis $TRAVIS_BUILD_NUMBER: Javadoc"
+git status
 git push -q origin gh-pages
 
 popd
