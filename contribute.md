@@ -1,3 +1,6 @@
+---
+title: Contribute to technicserver
+---
 You found some bug? Or want to contribute ideas or code, to make to project even more awesome? That's AWESOME :sunglasses:. Please feel free to do so
 
 # Bug report
