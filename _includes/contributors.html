@@ -1,6 +1,8 @@
 {% for c in site.github.contributors %}
-<div>
-<div><img alt="avatar" src="{{ c.avatar_url }}" height="50px" width="50px" /></div>
-<div><a href="{{ c.html_url }}">{{ c.login }}</a> ({{ c.contributions }} contributions)</div>
+<div style="height: 50px; clear: both;">
+  <div style="float: left;"><img alt="avatar" src="{{ c.avatar_url }}" height="50px" width="50px" /></div>
+  <div style="padding: 10px; float: left; height: 50px; text-align: center; vertical-align: middle;">
+    <a href="{{ c.html_url }}">{{ c.login }}</a> ({{ c.contributions }} contributions)
+  </div>
 </div>
 {% endfor %}
