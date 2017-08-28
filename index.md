@@ -29,5 +29,5 @@ Please keep in mind, this project is neighter an offical "Technicpack"/"Technic 
 
   ![getapiurl](/assets/img/getapiurl.png){:class="img-responsive"}
 
-* Start the Server with `java -jar technicserver.jar` 
+* Start the Server with `java -jar technicserver.jar`  
   *__Do not__ add your "optimizing" Java JVM Arguments and `nogui` Parameter here :bangbang: Use the `javaArgs` property inside the modpack.properties* 
