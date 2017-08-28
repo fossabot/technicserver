@@ -23,7 +23,6 @@ Please keep in mind, this project is neighter an offical "Technicpack"/"Technic 
   ```properties
   url=http://api.technicpack.net/modpack/your-modpack
   build=latest
-
   ```
 
   Replace the `url=...` with the API Url to the desired Modpack. You'll find the API Url by clicking `Install This Modpack` on the Modpack Page
@@ -31,5 +30,4 @@ Please keep in mind, this project is neighter an offical "Technicpack"/"Technic 
   ![getapiurl](/assets/img/getapiurl.png){:class="img-responsive"}
 
 * Start the Server with `java -jar technicserver.jar` 
-
-  *__Do not__ add your "optimizing" Java JVM Arguments and `nogui` Parameter here* :bangbang:
+  *__Do not__ add your "optimizing" Java JVM Arguments and `nogui` Parameter here :bangbang: Use the `javaArgs` property inside the modpack.properties* 
