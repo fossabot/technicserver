@@ -3,6 +3,8 @@ show_downloads: true
 analytics_enabled: true
 gems:
   - jemoji
+plugins:
+  - jekyll-sitemap
 defaults:
   - scope:
       path: "assets/img"
