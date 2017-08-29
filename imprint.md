@@ -4,14 +4,13 @@ title: Impressum
 # Imprint (DE Only)
 
 ## Angaben nach §5 Telemediengesetz
-
 Bennet Becker  
-Dresden
+<span class="unhideme" id="pae7phee0iejeMaX">U2FsdGVkX1+oFOsXTGX0kbFA2y4dGiMvcMx8dufj2eo=</span>  
+<span class="unhideme" id="eetohPhae1iev8Ah">U2FsdGVkX19mpMSozhdeWw9ULSiEFI7/mqGjXkdg1ZI=</span>
 
 ### Kontakt
-E-Mail: bennet@becker-dd.de
-
-*Addresse und Telefonkontakt, können bei notwendigkeit per Email angefragt werden*
+<span class="unhideme" id="ka7iefaeNof1yoo0">U2FsdGVkX19d6FunwuLcGQP5KdhJz6nth80LKt9nD285Z31BdoU4dkD7Q/bXjEu2</span>  
+<span class="unhideme" id="Ohco5Ouc7letha7I">U2FsdGVkX1/CpsNYNDIpUnXtJd8c2fe5a6bleGnm8pWrC6w0mJdSswRLAtW6NjBn</span>
 
 ## Haftung für Inhalte
 Als Diensteanbieter bin ich gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG bin ich als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
@@ -35,3 +34,4 @@ Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden 
 
 
 Quelle: [eRecht24](https://www.e-recht24.de)
+{% include unhide.html %}
