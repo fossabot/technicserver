@@ -5,11 +5,11 @@ title: Impressum
 
 ## Angaben nach §5 Telemediengesetz
 Bennet Becker  
-<span class="unhideme" id="pae7phee0iejeMaX">U2FsdGVkX1+oFOsXTGX0kbFA2y4dGiMvcMx8dufj2eo=</span>  
+<span class="unhideme" id="pae7phee0iejeMaX">U2FsdGVkX1+oFOsXTGX0kbFA2y4dGiMvcMx8dufj2eo=</span>
 <span class="unhideme" id="eetohPhae1iev8Ah">U2FsdGVkX19mpMSozhdeWw9ULSiEFI7/mqGjXkdg1ZI=</span>
 
 ### Kontakt
-<span class="unhideme" id="ka7iefaeNof1yoo0">U2FsdGVkX19d6FunwuLcGQP5KdhJz6nth80LKt9nD285Z31BdoU4dkD7Q/bXjEu2</span>  
+<span class="unhideme" id="ka7iefaeNof1yoo0">U2FsdGVkX19d6FunwuLcGQP5KdhJz6nth80LKt9nD285Z31BdoU4dkD7Q/bXjEu2</span>
 <span class="unhideme" id="Ohco5Ouc7letha7I">U2FsdGVkX1/CpsNYNDIpUnXtJd8c2fe5a6bleGnm8pWrC6w0mJdSswRLAtW6NjBn</span>
 
 ## Haftung für Inhalte
@@ -28,10 +28,11 @@ Es besteht keinerlei Gewährleistung für das Programm, soweit dies gesetzlich z
 ## Urheberrecht
 Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.
 
-Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend  entfernen.
-
+Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend  entfernen.  
+![CC-BY-ND](https://i.creativecommons.org/l/by-nd/4.0/88x31.png)
 
 
 
 Quelle: [eRecht24](https://www.e-recht24.de)
+
 {% include unhide.html %}
