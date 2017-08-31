@@ -11,4 +11,3 @@ engines:
 ratings:
   paths:
   - "**.java"
-exclude_paths: []
