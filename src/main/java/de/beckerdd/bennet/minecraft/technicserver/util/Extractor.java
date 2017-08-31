@@ -1,11 +1,11 @@
-package de.beckerdd.bennet.minecraft.technicserver.Helper;
+package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import java.io.*;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.
@@ -38,7 +38,7 @@ public class Extractor {
     public static HashSet<String> extractZip(FileInputStream fis) throws IOException {
         HashSet<String> files = new HashSet<>();
         int BUFFER = 2048;
-        BufferedOutputStream dest = null;
+        BufferedOutputStream dest;
         ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
         ZipEntry entry;
         while((entry = zis.getNextEntry()) != null) {

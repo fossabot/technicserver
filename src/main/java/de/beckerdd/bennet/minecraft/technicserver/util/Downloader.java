@@ -1,13 +1,12 @@
-package de.beckerdd.bennet.minecraft.technicserver.Helper;
+package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.
@@ -41,8 +40,8 @@ public class Downloader {
         HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
         long completeFileSize = httpConnection.getContentLength();
 
-        BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
-        FileOutputStream fos = new java.io.FileOutputStream(path);
+        BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
+        FileOutputStream fos = new FileOutputStream(path);
         BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
         byte[] data = new byte[1024];
         long downloadedFileSize = 0;

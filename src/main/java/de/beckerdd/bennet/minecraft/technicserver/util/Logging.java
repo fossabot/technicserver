@@ -1,14 +1,10 @@
-package de.beckerdd.bennet.minecraft.technicserver.Helper;
+package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.TimeZone;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.

@@ -1,6 +1,7 @@
 package de.beckerdd.bennet.minecraft.technicserver;
 
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Logging;
+import de.beckerdd.bennet.minecraft.technicserver.config.UserConfig;
+import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -12,7 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.
@@ -78,7 +79,7 @@ public class Solder implements Serializable {
 
     public void initMods(Modpack modpack) throws IOException {
         try {
-            String build = parseBuild(Config.getBuild(), modpack);
+            String build = parseBuild(UserConfig.getBuild(), modpack);
             URL modURL = new URL(url + "/modpack/" + modpack.getName() + "/" + build);
             URLConnection conn = modURL.openConnection();
 

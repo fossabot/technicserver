@@ -1,19 +1,15 @@
 package de.beckerdd.bennet.minecraft.technicserver;
 
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Downloader;
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Extractor;
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Logging;
+import de.beckerdd.bennet.minecraft.technicserver.util.Downloader;
+import de.beckerdd.bennet.minecraft.technicserver.util.Extractor;
+import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.

@@ -1,7 +1,7 @@
 package de.beckerdd.bennet.minecraft.technicserver;
 
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Downloader;
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Logging;
+import de.beckerdd.bennet.minecraft.technicserver.util.Downloader;
+import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 
 import javax.json.JsonObject;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.

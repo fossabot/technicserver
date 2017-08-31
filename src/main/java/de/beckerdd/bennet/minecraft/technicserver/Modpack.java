@@ -1,8 +1,9 @@
 package de.beckerdd.bennet.minecraft.technicserver;
 
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Downloader;
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Extractor;
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Logging;
+import de.beckerdd.bennet.minecraft.technicserver.config.UserConfig;
+import de.beckerdd.bennet.minecraft.technicserver.util.Downloader;
+import de.beckerdd.bennet.minecraft.technicserver.util.Extractor;
+import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 import org.apache.commons.io.FileUtils;
 
 import javax.json.Json;
@@ -17,7 +18,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
+/*
  * Created by bennet on 8/10/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.
@@ -282,12 +283,12 @@ public class Modpack implements Serializable{
                 newMods.addAll(updatedAndRemoved);
                 //removed
                 updatedAndRemoved.addAll(currentMods.stream().filter(
-                        cm -> mods.stream().allMatch(
-                                nm -> !cm.getName().equals(nm.getName())
+                        cm -> mods.stream().noneMatch(
+                                nm -> cm.getName().equals(nm.getName())
                 )).collect(Collectors.toSet()));
                 newMods.addAll(mods.stream().filter(
-                        nm -> currentMods.stream().allMatch(
-                                cm -> !cm.getName().equals(nm.getName())
+                        nm -> currentMods.stream().noneMatch(
+                                cm -> cm.getName().equals(nm.getName())
                         )).collect(Collectors.toSet()));
                 Logging.logDebug("Found " + updatedAndRemoved.size() + " updated or removed mods");
                 Logging.logDebug("Starting to clean mod for update");
@@ -326,7 +327,7 @@ public class Modpack implements Serializable{
                     Logging.logErr("Could not download mod " + mod.getName());
                 }
             });
-            buildInstalled = solder.parseBuild(Config.getBuild(), this);
+            buildInstalled = solder.parseBuild(UserConfig.getBuild(), this);
         }else {
             if(state == State.INSTALLED_UPDATEABLE) {
                 modFiles.get("package").parallelStream().forEach(fn -> {
@@ -373,7 +374,7 @@ public class Modpack implements Serializable{
     }
 
     /**
-     * Check and Update the internal State. Called by {@Link TechnicAPI#main(String[])} when modpack.state file found
+     * Check and Update the internal State. Called by TechnicAPI#main(String[]) when modpack.state file found
      * @param jsonStream Current JSOn from the API
      * @throws IOException fired by Malformed URLs
      */
@@ -383,7 +384,7 @@ public class Modpack implements Serializable{
 
         initSome(Json.createReader(jsonStream).readObject());
         if(((solder == null) && !(buildInstalled.equals(version))) ||
-                ((solder != null) && !buildInstalled.equals(solder.parseBuild(Config.getBuild(), this)))){
+                ((solder != null) && !buildInstalled.equals(solder.parseBuild(UserConfig.getBuild(), this)))){
             state = State.INSTALLED_UPDATEABLE;
         }else{
             state = State.INSTALLED_UPTODATE;

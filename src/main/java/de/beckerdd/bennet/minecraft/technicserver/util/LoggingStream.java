@@ -1,9 +1,9 @@
-package de.beckerdd.bennet.minecraft.technicserver.Helper;
+package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.

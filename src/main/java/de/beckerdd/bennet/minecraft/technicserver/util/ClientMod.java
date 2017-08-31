@@ -1,7 +1,6 @@
-package de.beckerdd.bennet.minecraft.technicserver.Helper;
+package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /*

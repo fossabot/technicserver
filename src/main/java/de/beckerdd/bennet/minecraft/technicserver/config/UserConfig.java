@@ -1,15 +1,15 @@
-package de.beckerdd.bennet.minecraft.technicserver;
+package de.beckerdd.bennet.minecraft.technicserver.config;
 
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Logging;
+import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.
@@ -32,11 +32,11 @@ import java.util.Properties;
 /**
  * Singelton for Reading modpack.properties
  */
-public class Config {
+public final class UserConfig {
     /**
      * Singelton Instance
      */
-    private static Config instance = new Config();
+    private static UserConfig instance = new UserConfig();
     /**
      * Parameter from propertiers File
      */
@@ -61,13 +61,32 @@ public class Config {
     /**
      * Private Singelton Constructor. Reading File and setting up Singelton
      */
-    private Config(){
+    private UserConfig(){
+        FileInputStream input;
+        Properties properties = new Properties();
         try {
-            FileInputStream input = new FileInputStream("modpack.properties");
+            input = new FileInputStream("modpack.properties");
+            properties.load(input);
+        }catch (IOException io){
+            io.printStackTrace();
+            Logging.logErr("Failed to load UserConfig. Creating new!");
+            properties.setProperty("url", "");
+            properties.setProperty("build", "latest");
+            properties.setProperty("autoupdate", "no");
+            properties.setProperty("javaArgs", "-server -Xmx4G -XX:+DisableExplicitGC -XX:+AggressiveOpts");
+
+            try {
+                properties.store(new FileOutputStream("modpack.properties"), null);
+            } catch (IOException e) {
+                Logging.logErr("Failed read and writing config. caused by: ");
+                e.printStackTrace();
+                Logging.logErr("Make sure modpack.properties is readable and writeable and restart! EXITING!");
+                System.exit(1);
+            }
+        }
 
             // load a properties file
-            Properties properties = new Properties();
-            properties.load(input);
+
             url = properties.getProperty("url");
             build = properties.getProperty("build");
             switch (properties.getProperty("autoupdate")){
@@ -77,6 +96,7 @@ public class Config {
                 case "Yes":
                 case "1":
                     autoupdate = true;
+                    break;
                 default:
                     autoupdate = false;
 
@@ -88,16 +108,12 @@ public class Config {
                 case "Yes":
                 case "1":
                     disableAnalytics = true;
+                    break;
                 default:
                     disableAnalytics = false;
 
             }
             javaArgs = Arrays.asList(properties.getProperty("javaArgs", "").split(" "));
-        }catch (IOException io){
-            io.printStackTrace();
-            Logging.logErr("Failed to load Config. Exiting!");
-            System.exit(1);
-        }
     }
 
     /**
@@ -141,9 +157,9 @@ public class Config {
     }
 
     /**
-     * Reread Config
+     * Reread UserConfig
      */
     public static void reload(){
-        instance = new Config();
+        instance = new UserConfig();
     }
 }
