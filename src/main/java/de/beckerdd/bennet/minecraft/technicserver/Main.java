@@ -57,7 +57,7 @@ public class Main {
 
             if (technicAPI.getModpack().getState() != Modpack.State.INSTALLED_UPTODATE) {
                 technicAPI.updatePack(Arrays.stream(args).anyMatch(a -> a.equalsIgnoreCase("update")));
-            }else{
+            } else {
                 Logging.log("Modpack is upto-date");
             }
 

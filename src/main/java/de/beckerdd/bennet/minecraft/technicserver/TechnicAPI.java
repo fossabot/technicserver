@@ -71,7 +71,7 @@ public class TechnicAPI {
         if (!(state = new File("modpack.state")).exists()) {
             Logging.logDebug("No State File Found");
             modpack = new Modpack(conn.getInputStream());
-        }else{
+        } else {
             Logging.logDebug("Loading old State");
             try {
                 FileInputStream fis = new FileInputStream(state);
@@ -124,7 +124,7 @@ public class TechnicAPI {
                                     " @ " + System.getenv("TRAVIS_COMMIT"));
 
                     piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", "TRAVIS"), 1);
-                }else {
+                } else {
                     piwikRequest.addCustomTrackingParameter("implementation-version", "DEBUG-RUN");
                     piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", "DEBUG-RUN"), 1);
                 }

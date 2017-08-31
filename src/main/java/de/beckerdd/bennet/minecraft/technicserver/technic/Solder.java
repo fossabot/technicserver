@@ -51,7 +51,7 @@ public class Solder implements Serializable {
         Logging.log("Install from Solder " + solder);
         if (solder.endsWith("/")) {
             url = solder.substring(0, solder.length() - 1);
-        }else {
+        } else {
             url = solder;
         }
 
@@ -128,7 +128,10 @@ public class Solder implements Serializable {
         return mirror_url;
     }
 
-    public static class BuildNotFoundException extends IOException{
+    /**
+     * Specified Build was not Found
+     */
+    public static class BuildNotFoundException extends IOException {
         /**
          * Constructs an {@code BuildNotFoundException} with {@code null}
          * as its error detail message.

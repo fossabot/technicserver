@@ -98,7 +98,7 @@ public class Mod implements Serializable {
             URL url = new URL(this.url);
 
             Downloader.downloadFile(url, cacheFilename, md5);
-        }else {
+        } else {
             Logging.log("File " + cacheFilename + " cached. Skipping.");
         }
         return this;

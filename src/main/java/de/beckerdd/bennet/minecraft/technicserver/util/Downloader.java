@@ -115,7 +115,10 @@ public class Downloader {
         downloadFile(new URL(url), path, md5);
     }
 
-    public static class DownloadException extends IOException{
+    /**
+     * Download Failure
+     */
+    public static class DownloadException extends IOException {
         /**
          * {@inheritDoc}
          */

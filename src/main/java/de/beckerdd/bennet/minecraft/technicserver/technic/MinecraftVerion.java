@@ -1,4 +1,4 @@
-package de.beckerdd.bennet.minecraft.technicserver;
+package de.beckerdd.bennet.minecraft.technicserver.technic;
 
 import de.beckerdd.bennet.minecraft.technicserver.config.StaticConfig;
 import de.beckerdd.bennet.minecraft.technicserver.util.Downloader;
@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 /**
  * Represent the Minecraft Version in very fancy manner
  */
-public class MinecraftVerion implements Serializable{
+public class MinecraftVerion implements Serializable {
     /**
      * Major Version part. E.g. 7 if MC Version is 1.7.X
      */

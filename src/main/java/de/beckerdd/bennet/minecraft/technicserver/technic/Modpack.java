@@ -1,7 +1,5 @@
 package de.beckerdd.bennet.minecraft.technicserver.technic;
 
-import de.beckerdd.bennet.minecraft.technicserver.MinecraftVerion;
-import de.beckerdd.bennet.minecraft.technicserver.Resource;
 import de.beckerdd.bennet.minecraft.technicserver.config.UserConfig;
 import de.beckerdd.bennet.minecraft.technicserver.util.Downloader;
 import de.beckerdd.bennet.minecraft.technicserver.util.Extractor;
@@ -95,7 +93,7 @@ public class Modpack implements Serializable {
             solder = null;
             mods = null;
             Logging.logDebug("Modpack isn't using Solder API");
-        }else {
+        } else {
             solder = new Solder(obj.getString("solder"));
             mods = new HashSet<>();
             Logging.logDebug("Modpack is using Solder API @ " + solder);
@@ -120,7 +118,7 @@ public class Modpack implements Serializable {
         user = obj.getString("user");
         if (obj.getString("url", "").equals("")) {
             url = null;
-        }else{
+        } else {
             url = new URL(obj.getString("url"));
         }
         platformUrl = obj.getString("platformUrl");
@@ -141,7 +139,7 @@ public class Modpack implements Serializable {
         background = new Resource(obj.getJsonObject("background"));
         if (obj.getString("discordServerId", "").equals("")) {
             discordServerId = null;
-        }else {
+        } else {
             discordServerId = new Discord(obj.getString("discordServerId"));
         }
     }
@@ -378,7 +376,7 @@ public class Modpack implements Serializable {
                 mods = new HashSet<>();
                 solder.initMods(this);
             }
-        }else{
+        } else {
             modFiles.put("package", Extractor.extractZip("cache/package.zip"));
         }
         state = State.INSTALLED_UPTODATE;
@@ -398,7 +396,7 @@ public class Modpack implements Serializable {
         if (((solder == null) && !(buildInstalled.equals(version))) ||
                 ((solder != null) && !buildInstalled.equals(solder.parseBuild(UserConfig.getBuild(), this)))) {
             state = State.INSTALLED_UPDATEABLE;
-        }else{
+        } else {
             state = State.INSTALLED_UPTODATE;
         }
     }

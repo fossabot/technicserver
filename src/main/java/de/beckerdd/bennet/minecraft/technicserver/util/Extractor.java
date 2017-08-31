@@ -62,8 +62,9 @@ public class Extractor {
             }
             dest.flush();
             dest.close();
-            if (entry.isDirectory())
+            if (entry.isDirectory()) {
                 files.add(entry.getName());
+            }
         }
         zis.close();
         return files;

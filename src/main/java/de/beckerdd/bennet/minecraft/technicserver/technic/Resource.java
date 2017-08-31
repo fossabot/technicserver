@@ -1,4 +1,4 @@
-package de.beckerdd.bennet.minecraft.technicserver;
+package de.beckerdd.bennet.minecraft.technicserver.technic;
 
 import de.beckerdd.bennet.minecraft.technicserver.util.Downloader;
 import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
@@ -32,7 +32,7 @@ import java.net.URL;
 /**
  * Represents a Resource File
  */
-public class Resource implements Serializable{
+public class Resource implements Serializable {
     /**
      * File URL
      */

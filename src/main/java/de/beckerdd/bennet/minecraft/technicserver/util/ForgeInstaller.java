@@ -46,8 +46,9 @@ public class ForgeInstaller {
             JsonObject lib = (JsonObject) jVal;
 
             //We wan't to skip unnecessary libs
-            if (!lib.getBoolean("serverreq", false))
+            if (!lib.getBoolean("serverreq", false)) {
                 return;
+            }
 
             Logging.log("Start downloading Forge Library '" + lib.getString("name") + "'");
             String[] maven = lib.getString("name").split(":");
@@ -59,7 +60,7 @@ public class ForgeInstaller {
             String url;
             if (baseurl.endsWith("/")) {
                 url = String.format("%s%s/%s", lib.getString("url", StaticConfig.LIBRARIES_URL), pathname, filename);
-            }else{
+            } else {
                 url = String.format("%s/%s/%s", lib.getString("url", StaticConfig.LIBRARIES_URL), pathname, filename);
             }
 
@@ -100,7 +101,8 @@ public class ForgeInstaller {
             }
         });
 
-        if (!success.get())
+        if (!success.get()) {
             throw new IOException("ForgeInstaller Failed");
+        }
     }
 }
