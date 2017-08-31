@@ -10,6 +10,5 @@ engines:
     channel: "beta"
 ratings:
   paths:
-  - src/main/java/**
   - "**.java"
 exclude_paths: []
