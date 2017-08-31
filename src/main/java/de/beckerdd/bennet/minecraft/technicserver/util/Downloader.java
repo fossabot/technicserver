@@ -1,10 +1,13 @@
 package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /*
  * Created by bennet on 8/7/17.
@@ -37,19 +40,21 @@ public class Downloader {
      * @throws IOException throws if file not downloadable or destination not writeable
      */
     public static void downloadFile(URL url, String path) throws IOException {
+        FileUtils.forceMkdirParent(new File(path));
+
         HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
-        long completeFileSize = httpConnection.getContentLength();
+        //long completeFileSize = httpConnection.getContentLength();
 
         BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
         FileOutputStream fos = new FileOutputStream(path);
         BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
         byte[] data = new byte[1024];
-        long downloadedFileSize = 0;
+        //long downloadedFileSize = 0;
 
         int x;
         Logging.log("starting package download from " + url);
         while ((x = in.read(data, 0, 1024)) >= 0) {
-            downloadedFileSize += x;
+            //downloadedFileSize += x;
 
             /*// calculate progress
             int currentProgress = (int) ((((double)downloadedFileSize) / ((double)completeFileSize)) * 100.0);
@@ -93,6 +98,7 @@ public class Downloader {
     public static void downloadFile(URL url, String path, String md5) throws IOException {
         downloadFile(url, path);
         FileInputStream fis = new FileInputStream(new File(path));
+
         if(!DigestUtils.md5Hex(fis).equalsIgnoreCase(md5)){
             throw new DownloadException("MD5 sum missmatch");
         }

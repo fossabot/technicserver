@@ -1,4 +1,4 @@
-package de.beckerdd.bennet.minecraft.technicserver;
+package de.beckerdd.bennet.minecraft.technicserver.technic;
 
 import de.beckerdd.bennet.minecraft.technicserver.config.UserConfig;
 import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
@@ -124,7 +124,7 @@ public class Solder implements Serializable {
         return url;
     }
 
-    public String getMirror_url() {
+    public String getMirrorUrl() {
         return mirror_url;
     }
 

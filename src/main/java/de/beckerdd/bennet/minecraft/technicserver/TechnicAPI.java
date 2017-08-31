@@ -2,16 +2,18 @@ package de.beckerdd.bennet.minecraft.technicserver;
 
 import de.beckerdd.bennet.minecraft.technicserver.config.StaticConfig;
 import de.beckerdd.bennet.minecraft.technicserver.config.UserConfig;
+import de.beckerdd.bennet.minecraft.technicserver.technic.Modpack;
 import de.beckerdd.bennet.minecraft.technicserver.util.ClientMod;
+import de.beckerdd.bennet.minecraft.technicserver.util.ForgeInstaller;
 import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
-import de.beckerdd.bennet.minecraft.technicserver.minecraftforge.installer.InstallerAction;
-import de.beckerdd.bennet.minecraft.technicserver.minecraftforge.installer.ServerInstall;
-import de.beckerdd.bennet.minecraft.technicserver.minecraftforge.installer.VersionInfo;
 import org.apache.commons.io.FileUtils;
 import org.piwik.java.tracking.CustomVariable;
 import org.piwik.java.tracking.PiwikRequest;
 import org.piwik.java.tracking.PiwikTracker;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
 import java.nio.file.*;
@@ -106,7 +108,7 @@ public class TechnicAPI {
                 piwikRequest.addCustomTrackingParameter("implementation-version", Main.class.getPackage().getImplementationVersion());
                 piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", Main.class.getPackage().getImplementationVersion()), 1);
             } else {
-                if(System.getenv("TRAVIS").equalsIgnoreCase("true")){
+                if(System.getenv("TRAVIS") != null && System.getenv("TRAVIS").equalsIgnoreCase("true")){
                     piwikRequest.addCustomTrackingParameter("implementation-version",
                             "TRAVIS #" + System.getenv("TRAVIS_BUILD_NUMBER") +
                                     " @ " + System.getenv("TRAVIS_COMMIT"));
@@ -160,17 +162,11 @@ public class TechnicAPI {
         JarFile jarFile = conn.getJarFile();
         JarEntry jarEntry = conn.getJarEntry();
 
-        VersionInfo.overriddenMinecraftVersion = modpack.getMinecraft().toString();
-        VersionInfo.LazyInit(jarFile.getInputStream(jarEntry));
-        ServerInstall.headless = true;
-        if (!InstallerAction.SERVER.run(new File("."), s -> true)) {
-            Logging.logErr("There was an error during server installation");
-        } else {
-            Files.copy(
-                    FileSystems.getDefault().getPath("bin","modpack.jar"),
-                    FileSystems.getDefault().getPath("modpack.jar"), StandardCopyOption.REPLACE_EXISTING);
-            Logging.log("Forge Mod Loader successfully installed");
-        }
+        ForgeInstaller.installForge(jarFile.getInputStream(jarEntry));
+        FileUtils.copyFile(new File("bin/modpack.jar"), new File("modpack.jar"));
+        modpack.getMinecraft().download();
+
+        Logging.log("Forge Mod Loader successfully installed");
     }
 
     /**

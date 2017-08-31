@@ -1,5 +1,7 @@
 package de.beckerdd.bennet.minecraft.technicserver.util;
 
+import org.tukaani.xz.XZInputStream;
+
 import java.io.*;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
@@ -77,4 +79,26 @@ public class Extractor {
         return extractZip(new FileInputStream(filename));
     }
 
+    /**
+     * Extract XZ by Filename
+     * @param filename Path to XZ File
+     * @throws IOException Input or Output not readable/writeable
+     */
+    public static void extractXZ(String filename) throws IOException {
+        FileInputStream fis = new FileInputStream(filename);
+        BufferedInputStream in = new BufferedInputStream(fis);
+        FileOutputStream fos = new FileOutputStream(filename.substring(0, filename.lastIndexOf(".")));
+
+        XZInputStream xzis = new XZInputStream(in);
+        byte[] buffer = new byte[8192];
+        int count;
+
+        Logging.log("Extracting " + filename);
+        while((count = xzis.read(buffer)) != -1){
+            fos.write(buffer, 0, count);
+        }
+
+        fos.close();
+        xzis.close();
+    }
 }

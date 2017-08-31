@@ -22,4 +22,8 @@ package de.beckerdd.bennet.minecraft.technicserver.config;
 public final class StaticConfig {
     public static String PIWIK_URL = "https://piwik.becker-dd.de/piwik.php";
     public static String PIWIK_PROPERTY = "http://technicserver.minecraft.bennet.becker-dd.de/java";
+
+    public static String LIBRARIES_URL = "https://libraries.minecraft.net/";
+
+    public static String MINECRAFT_JAR_PATTERN = "https://s3.amazonaws.com/Minecraft.Download/versions/{MCVER}/minecraft_server.{MCVER}.jar";
 }

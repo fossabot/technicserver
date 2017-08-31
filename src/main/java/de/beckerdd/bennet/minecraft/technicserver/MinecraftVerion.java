@@ -1,10 +1,14 @@
 package de.beckerdd.bennet.minecraft.technicserver;
 
+import de.beckerdd.bennet.minecraft.technicserver.config.StaticConfig;
+import de.beckerdd.bennet.minecraft.technicserver.util.Downloader;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.MalformedParametersException;
 import java.util.regex.Pattern;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.
@@ -68,6 +72,12 @@ public class MinecraftVerion implements Serializable{
      */
     public int getMinor() {
         return minor;
+    }
+
+    public void download() throws IOException {
+        Downloader.downloadFile(
+                StaticConfig.MINECRAFT_JAR_PATTERN.replace("{MCVER}", this.toString()),
+                "minecraft_server" + toString() + ".jar");
     }
 
     /**

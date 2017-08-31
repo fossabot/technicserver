@@ -1,6 +1,7 @@
 package de.beckerdd.bennet.minecraft.technicserver;
 
 import de.beckerdd.bennet.minecraft.technicserver.config.UserConfig;
+import de.beckerdd.bennet.minecraft.technicserver.technic.Modpack;
 import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 
 import java.io.*;
