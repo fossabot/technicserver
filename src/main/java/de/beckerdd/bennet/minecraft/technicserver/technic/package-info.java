@@ -1,10 +1,6 @@
-package de.beckerdd.bennet.minecraft.technicserver.technic;
-
-import java.io.Serializable;
-
 /*
- * Created by bennet on 8/7/17.
- *
+ * Created by Bennet on 01/09/2017 01:01.
+ * 
  * technicserver - run modpacks from technicpack.net as server with ease.
  * Copyright (C) 2017 Bennet Becker <bennet@becker-dd.de>
  *
@@ -23,18 +19,9 @@ import java.io.Serializable;
  */
 
 /**
- * for now unused class only completly reading API JSON
- * TODO give this a function :)
+ * All Technic API Related Classes (nearly pure JSON Representation)
+ * @since 1.1
+ * @author Bennet Becker
+ * @version 1.1
  */
-public class Discord implements Serializable {
-    private String discordServerId;
-
-    public Discord(String discordServerId) {
-        this.discordServerId = discordServerId;
-    }
-
-    @Override
-    public String toString() {
-        return discordServerId;
-    }
-}
+package de.beckerdd.bennet.minecraft.technicserver.technic;

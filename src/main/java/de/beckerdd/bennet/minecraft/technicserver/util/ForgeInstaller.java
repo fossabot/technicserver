@@ -1,19 +1,14 @@
 package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import de.beckerdd.bennet.minecraft.technicserver.config.StaticConfig;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -46,12 +41,12 @@ public class ForgeInstaller {
         JsonObject obj = rdr.readObject();
 
         AtomicBoolean success = new AtomicBoolean(true);
-        //for(JsonValue jVal : obj.getJsonArray("libraries")){
+        //for(JsonValue jVal : obj.getJsonArray("libraries")) {
         obj.getJsonArray("libraries").parallelStream().forEach( jVal -> {
             JsonObject lib = (JsonObject) jVal;
 
             //We wan't to skip unnecessary libs
-            if(!lib.getBoolean("serverreq", false))
+            if (!lib.getBoolean("serverreq", false))
                 return;
 
             Logging.log("Start downloading Forge Library '" + lib.getString("name") + "'");
@@ -62,14 +57,14 @@ public class ForgeInstaller {
             String filename = String.format("%s-%s.jar", maven[1], maven[2]);
             String baseurl = lib.getString("url", StaticConfig.LIBRARIES_URL);
             String url;
-            if(baseurl.endsWith("/")) {
+            if (baseurl.endsWith("/")) {
                 url = String.format("%s%s/%s", lib.getString("url", StaticConfig.LIBRARIES_URL), pathname, filename);
             }else{
                 url = String.format("%s/%s/%s", lib.getString("url", StaticConfig.LIBRARIES_URL), pathname, filename);
             }
 
             LinkedList<String> checksums = null;
-            if(lib.getJsonArray("checksums") != null){
+            if (lib.getJsonArray("checksums") != null) {
                 checksums = new LinkedList<>();
                 for (JsonValue v : lib.getJsonArray("checksums")) {
                     checksums.add(v.toString());
@@ -89,7 +84,7 @@ public class ForgeInstaller {
                     new File(downloadFile).renameTo(
                             new File(downloadFile.substring(0, downloadFile.lastIndexOf("."))));
                 }
-                /*if (checksums != null){
+                /*if (checksums != null) {
                     String checksum = DigestUtils.sha1Hex(new FileInputStream(downloadFile));
                     if (checksums.stream().noneMatch(c -> c.equalsIgnoreCase(checksum))) {
                         //throw new Downloader.DownloadException("SHA1 Sum Missmatch");
@@ -98,14 +93,14 @@ public class ForgeInstaller {
                                 DigestUtils.sha1Hex(new FileInputStream(downloadFile)));
                     }
                 }*/
-            }catch (IOException e){
+            } catch (IOException e) {
                 success.set(false);
                 Logging.logErr("Failed downloading Forge Library '" + lib.getString("name") + "'!");
                 e.printStackTrace();
             }
         });
 
-        if(!success.get())
+        if (!success.get())
             throw new IOException("ForgeInstaller Failed");
     }
 }

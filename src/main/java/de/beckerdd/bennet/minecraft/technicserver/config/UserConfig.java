@@ -61,13 +61,13 @@ public final class UserConfig {
     /**
      * Private Singelton Constructor. Reading File and setting up Singelton
      */
-    private UserConfig(){
+    private UserConfig() {
         FileInputStream input;
         Properties properties = new Properties();
         try {
             input = new FileInputStream("modpack.properties");
             properties.load(input);
-        }catch (IOException io){
+        } catch (IOException io) {
             io.printStackTrace();
             Logging.logErr("Failed to load UserConfig. Creating new!");
             properties.setProperty("url", "");
@@ -89,7 +89,7 @@ public final class UserConfig {
 
             url = properties.getProperty("url");
             build = properties.getProperty("build");
-            switch (properties.getProperty("autoupdate")){
+            switch (properties.getProperty("autoupdate")) {
                 case "true":
                 case "True":
                 case "yes":
@@ -101,7 +101,7 @@ public final class UserConfig {
                     autoupdate = false;
 
             }
-            switch (properties.getProperty("disableAnalytics", "false")){
+            switch (properties.getProperty("disableAnalytics", "false")) {
                 case "true":
                 case "True":
                 case "yes":
@@ -159,7 +159,7 @@ public final class UserConfig {
     /**
      * Reread UserConfig
      */
-    public static void reload(){
+    public static void reload() {
         instance = new UserConfig();
     }
 }

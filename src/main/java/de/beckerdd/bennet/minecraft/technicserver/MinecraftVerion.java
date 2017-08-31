@@ -45,15 +45,15 @@ public class MinecraftVerion implements Serializable{
      * Setup this very fancy class
      * @param versionString original version string such as "1.7.10"
      */
-    public MinecraftVerion(String versionString){
+    public MinecraftVerion(String versionString) {
         String[] ver = versionString.split(Pattern.quote("."));
-        if(ver.length > 3 || ver.length < 2){
+        if (ver.length > 3 || ver.length < 2) {
             throw new MalformedParametersException("Invalid Minecraft Version String");
         }
         major = Integer.parseInt(ver[1]);
         try {
             minor = Integer.parseInt(ver[2]);
-        }catch (ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
             minor = 0;
         }
     }
@@ -84,10 +84,7 @@ public class MinecraftVerion implements Serializable{
      * give back the "original" version String
      * @return version string
      */
-    @Override public String toString(){
-        if(minor != 0)
-            return "1." + major + "." + minor;
-        else
-            return "1." + major;
+    @Override public String toString() {
+        return minor != 0 ? "1." + major + "." + minor : "1." + major;
     }
 }

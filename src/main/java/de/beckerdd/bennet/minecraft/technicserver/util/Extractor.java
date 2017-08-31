@@ -43,14 +43,14 @@ public class Extractor {
         BufferedOutputStream dest;
         ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
         ZipEntry entry;
-        while((entry = zis.getNextEntry()) != null) {
+        while ((entry = zis.getNextEntry()) != null) {
             Logging.log("Extracting: " + entry);
             int count;
             byte data[] = new byte[BUFFER];
             // write the files to the disk
-            if(entry.isDirectory()){
+            if (entry.isDirectory()) {
                 Logging.logDebug(entry + " is Directory");
-                if(!(new File(entry.getName())).mkdir()){
+                if (!(new File(entry.getName())).mkdir()) {
                     Logging.logDebug("Directory exists");
                 }
                 continue;
@@ -62,7 +62,7 @@ public class Extractor {
             }
             dest.flush();
             dest.close();
-            if(entry.isDirectory())
+            if (entry.isDirectory())
                 files.add(entry.getName());
         }
         zis.close();
@@ -94,7 +94,7 @@ public class Extractor {
         int count;
 
         Logging.log("Extracting " + filename);
-        while((count = xzis.read(buffer)) != -1){
+        while ((count = xzis.read(buffer)) != -1) {
             fos.write(buffer, 0, count);
         }
 

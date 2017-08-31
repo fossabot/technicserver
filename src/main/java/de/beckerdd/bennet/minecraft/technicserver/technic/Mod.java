@@ -5,7 +5,10 @@ import de.beckerdd.bennet.minecraft.technicserver.util.Extractor;
 import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.HashSet;
 
@@ -32,7 +35,7 @@ import java.util.HashSet;
 /**
  * Representation of a Mod inside an Solder API
  */
-public class Mod implements Serializable{
+public class Mod implements Serializable {
     /**
      * Name of the Mod
      */
@@ -90,7 +93,7 @@ public class Mod implements Serializable{
      * @throws IOException Download Failed
      */
     public Mod download() throws IOException {
-        if(!(new File(cacheFilename)).exists() ||
+        if (!(new File(cacheFilename)).exists() ||
                 !DigestUtils.md5Hex(new FileInputStream(new File(cacheFilename))).equalsIgnoreCase(md5)) {
             URL url = new URL(this.url);
 

@@ -3,6 +3,7 @@ package de.beckerdd.bennet.minecraft.technicserver;
 import de.beckerdd.bennet.minecraft.technicserver.config.StaticConfig;
 import de.beckerdd.bennet.minecraft.technicserver.config.UserConfig;
 import de.beckerdd.bennet.minecraft.technicserver.technic.Modpack;
+import de.beckerdd.bennet.minecraft.technicserver.util.ANSIColor;
 import de.beckerdd.bennet.minecraft.technicserver.util.ClientMod;
 import de.beckerdd.bennet.minecraft.technicserver.util.ForgeInstaller;
 import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
@@ -11,12 +12,12 @@ import org.piwik.java.tracking.CustomVariable;
 import org.piwik.java.tracking.PiwikRequest;
 import org.piwik.java.tracking.PiwikTracker;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.*;
-import java.nio.file.*;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Paths;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -67,7 +68,7 @@ public class TechnicAPI {
             throw new MalformedURLException("Not an API URL");
         }
 
-        if(!(state = new File("modpack.state")).exists()) {
+        if (!(state = new File("modpack.state")).exists()) {
             Logging.logDebug("No State File Found");
             modpack = new Modpack(conn.getInputStream());
         }else{
@@ -81,7 +82,7 @@ public class TechnicAPI {
                 fis.close();
 
                 modpack.update(conn.getInputStream());
-            }catch (Exception ignore){
+            } catch (Exception ignore) {
                 Logging.logErr("STATE FILE INVALID! PLEASE RESTART!");
                 FileUtils.forceDelete(state);
                 System.exit(1);
@@ -89,12 +90,21 @@ public class TechnicAPI {
         }
     }
 
-    public void runAnalytics(String runtime){
+    /**
+     * Report Statisics to Piwik instance
+     * @param runtime Loadup time
+     */
+    public void runAnalytics(String runtime) {
         runAnalytics(runtime,false);
     }
 
-    public void runAnalytics(String runtime, boolean force){
-        if(!UserConfig.isDisableAnalytics() || force) {
+    /**
+     * Report Statisics to Piwik instance
+     * @param runtime Loadup time
+     * @param force override user config
+     */
+    public void runAnalytics(String runtime, boolean force) {
+        if (!UserConfig.isDisableAnalytics() || force) {
             PiwikRequest piwikRequest;
 
             try {
@@ -108,7 +118,7 @@ public class TechnicAPI {
                 piwikRequest.addCustomTrackingParameter("implementation-version", Main.class.getPackage().getImplementationVersion());
                 piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", Main.class.getPackage().getImplementationVersion()), 1);
             } else {
-                if(System.getenv("TRAVIS") != null && System.getenv("TRAVIS").equalsIgnoreCase("true")){
+                if (System.getenv("TRAVIS") != null && System.getenv("TRAVIS").equalsIgnoreCase("true")) {
                     piwikRequest.addCustomTrackingParameter("implementation-version",
                             "TRAVIS #" + System.getenv("TRAVIS_BUILD_NUMBER") +
                                     " @ " + System.getenv("TRAVIS_COMMIT"));
@@ -143,10 +153,10 @@ public class TechnicAPI {
      */
     public void downloadAndInstallModpack() throws IOException {
         modpack.downloadAll().extractAll();
-        try{
+        try {
             Logging.log("Downloading Server Icon");
             modpack.getIcon().download("server-icon.png");
-        }catch (MalformedURLException ignore){
+        } catch (MalformedURLException ignore) {
             Logging.logErr("Icon Download Failed");
         }
     }
@@ -184,11 +194,11 @@ public class TechnicAPI {
                             e.printStackTrace();
                         }
                     } else {
-                        boolean b = child.delete();
+                        child.delete();
                     }
                 }
             }
-        }catch (NullPointerException ignore) {
+        } catch (NullPointerException ignore) {
             Logging.logErr("Ohh, your seams mods folder empty o.Ô");
         }
     }
@@ -217,17 +227,23 @@ public class TechnicAPI {
         fos.close();
     }
 
+    /**
+     * Check for Modpack update
+     * @param force override user config
+     * @throws IOException Download, Extract or Convert failed
+     * @throws InterruptedException sleep failed
+     */
     public void updatePack(boolean force) throws IOException, InterruptedException {
-        if(UserConfig.isAutoupdate() || force ||
-                this.getModpack().getState() == Modpack.State.NOT_INSTALLED ){
+        if (UserConfig.isAutoupdate() || force ||
+                this.getModpack().getState() == Modpack.State.NOT_INSTALLED ) {
             this.downloadAndInstallModpack();
             this.convertServer();
             this.cleanClientMods();
         } else {
-            Logging.log(Logging.ANSI_RED + Logging.ANSI_YELLOW_BACKGROUND +
+            Logging.log(ANSIColor.ANSI_RED + ANSIColor.ANSI_YELLOW_BACKGROUND +
                     "MODPACK UPDATE AVAILABLE, BUT AUTOUPDATE IS DISABLED. " +
                     "START WITH \"update\" AS PARAMETER OR SET AUTOUPDATE TO \"yes\"" +
-                    Logging.ANSI_RESET);
+                    ANSIColor.ANSI_RESET);
 
             Logging.logDebug("sleeping 5 sec.");
             Thread.sleep(5000);

@@ -17,7 +17,9 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /*
@@ -43,7 +45,7 @@ import java.util.stream.Collectors;
 /**
  * Class representing the Modpack inside the API
  */
-public class Modpack implements Serializable{
+public class Modpack implements Serializable {
     //region private Fields - API
     private int id;
     private String name;
@@ -89,7 +91,7 @@ public class Modpack implements Serializable{
         JsonObject obj = rdr.readObject();
 
         initSome(obj);
-        if(obj.getString("solder", "").equals("")){
+        if (obj.getString("solder", "").equals("")) {
             solder = null;
             mods = null;
             Logging.logDebug("Modpack isn't using Solder API");
@@ -116,7 +118,7 @@ public class Modpack implements Serializable{
         name = obj.getString("name");
         displayName = obj.getString("displayName");
         user = obj.getString("user");
-        if(obj.getString("url", "").equals("")){
+        if (obj.getString("url", "").equals("")) {
             url = null;
         }else{
             url = new URL(obj.getString("url"));
@@ -137,7 +139,7 @@ public class Modpack implements Serializable{
         icon = new Resource(obj.getJsonObject("icon"));
         logo = new Resource(obj.getJsonObject("logo"));
         background = new Resource(obj.getJsonObject("background"));
-        if(obj.getString("discordServerId", "").equals("")){
+        if (obj.getString("discordServerId", "").equals("")) {
             discordServerId = null;
         }else {
             discordServerId = new Discord(obj.getString("discordServerId"));
@@ -145,7 +147,7 @@ public class Modpack implements Serializable{
     }
 
     //region Getters
-    public String getName(){
+    public String getName() {
         return name;
     }
 
@@ -247,7 +249,7 @@ public class Modpack implements Serializable{
 
     //endregion
 
-    public void overrideMinecraft(String minecraft){
+    public void overrideMinecraft(String minecraft) {
         this.minecraft = new MinecraftVerion(minecraft);
     }
 
@@ -269,10 +271,10 @@ public class Modpack implements Serializable{
     public Modpack downloadAll() throws IOException {
         FileUtils.forceMkdir(new File("cache/"));
 
-        if(solder != null){
+        if (solder != null) {
             downloadAllViaSolder();
         } else {
-            if(state == State.INSTALLED_UPDATEABLE) {
+            if (state == State.INSTALLED_UPDATEABLE) {
                 modFiles.get("package").parallelStream().forEach(fn -> {
                     try {
                         Logging.logDebug("Deleting " + fn);
@@ -295,7 +297,7 @@ public class Modpack implements Serializable{
      */
     private void downloadAllViaSolder() throws IOException{
         HashSet<Mod> modsToDownload;
-        if(state == State.INSTALLED_UPDATEABLE) {
+        if (state == State.INSTALLED_UPDATEABLE) {
             modsToDownload = new HashSet<>();
 
             HashSet<Mod> oldMods = new HashSet<>(mods);
@@ -303,7 +305,6 @@ public class Modpack implements Serializable{
             solder.initMods(this);
 
             HashSet<Mod> modsToClear = new HashSet<>();
-            HashSet<Mod> newMods = new HashSet<>();
 
             Logging.logDebug("Searching for updated or removed mods");
 
@@ -363,7 +364,7 @@ public class Modpack implements Serializable{
      * @throws IOException Source File or Destination Path are unreadable/writeable
      */
     public Modpack extractAll() throws IOException {
-        if(solder != null){
+        if (solder != null) {
             mods.parallelStream().forEach(mod -> {
                 try {
                     mod.extract();
@@ -373,7 +374,7 @@ public class Modpack implements Serializable{
                 }
                 modFiles.put(mod.getName(), mod.getFileSet());
             });
-            if(state == State.INSTALLED_UPDATEABLE){
+            if (state == State.INSTALLED_UPDATEABLE) {
                 mods = new HashSet<>();
                 solder.initMods(this);
             }
@@ -390,12 +391,12 @@ public class Modpack implements Serializable{
      * @throws IOException fired by Malformed URLs
      */
     public void update(InputStream jsonStream) throws IOException {
-        if(state == null || state == State.NOT_INSTALLED)
+        if (state == null || state == State.NOT_INSTALLED)
             throw new IllegalStateException();
 
         initSome(Json.createReader(jsonStream).readObject());
-        if(((solder == null) && !(buildInstalled.equals(version))) ||
-                ((solder != null) && !buildInstalled.equals(solder.parseBuild(UserConfig.getBuild(), this)))){
+        if (((solder == null) && !(buildInstalled.equals(version))) ||
+                ((solder != null) && !buildInstalled.equals(solder.parseBuild(UserConfig.getBuild(), this)))) {
             state = State.INSTALLED_UPDATEABLE;
         }else{
             state = State.INSTALLED_UPTODATE;

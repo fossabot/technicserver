@@ -4,8 +4,10 @@ import de.beckerdd.bennet.minecraft.technicserver.config.UserConfig;
 import de.beckerdd.bennet.minecraft.technicserver.technic.Modpack;
 import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 
 
 /*
@@ -43,8 +45,8 @@ public class Main {
                 "This is free software, and you are welcome to redistribute it under certain conditions;\n\n" +
                 "See https://github.com/bennet0496/technicserver for more details\n\n");
 
-        try{
-            if(UserConfig.getUrl().equalsIgnoreCase("")){
+        try {
+            if (UserConfig.getUrl().equalsIgnoreCase("")) {
                 Logging.logErr("No Modpack configured! Please edit modpack.properties and restart.");
                 System.exit(1);
             }
@@ -53,7 +55,7 @@ public class Main {
 
             TechnicAPI technicAPI = new TechnicAPI(UserConfig.getUrl());
 
-            if(technicAPI.getModpack().getState() != Modpack.State.INSTALLED_UPTODATE) {
+            if (technicAPI.getModpack().getState() != Modpack.State.INSTALLED_UPTODATE) {
                 technicAPI.updatePack(Arrays.stream(args).anyMatch(a -> a.equalsIgnoreCase("update")));
             }else{
                 Logging.log("Modpack is upto-date");
@@ -81,7 +83,7 @@ public class Main {
             Process modpackProcess = modpackProcessTpl.start();
             modpackProcess.waitFor();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }

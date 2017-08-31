@@ -29,7 +29,7 @@ public class ClientMod {
     /**
      * Set of Strings with Client Mod name Regualar Expressions
      */
-    private static Set<String> clientModRegex = new HashSet<String>(){{
+    private static Set<String> clientModRegex = new HashSet<String>() {{
         add("^[lL]ite[lL]oader.*jar$");
         add("^.*litemod$");
         add("^WorldEdit$");
@@ -51,7 +51,7 @@ public class ClientMod {
      * @param name Mod Zip Name
      * @return weather a Client mod was supplied
      */
-    public static boolean isClientMod(String name){
+    public static boolean isClientMod(String name) {
         return clientModRegex.stream().anyMatch(name::matches);
     }
 }

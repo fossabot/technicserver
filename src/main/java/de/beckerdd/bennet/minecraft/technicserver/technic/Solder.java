@@ -49,14 +49,14 @@ public class Solder implements Serializable {
 
     public Solder(String solder) throws IOException {
         Logging.log("Install from Solder " + solder);
-        if(solder.endsWith("/")) {
+        if (solder.endsWith("/")) {
             url = solder.substring(0, solder.length() - 1);
         }else {
             url = solder;
         }
 
         URLConnection conn = (new URL(url)).openConnection();
-        if(!conn.getContentType().startsWith("application/json")){
+        if (!conn.getContentType().startsWith("application/json")) {
             throw new MalformedURLException("Not an API URL");
         }
         JsonReader rdr = Json.createReader(conn.getInputStream());
@@ -67,13 +67,13 @@ public class Solder implements Serializable {
 
         conn = (new URL(url + "/modpack")).openConnection();
 
-        if(!conn.getContentType().startsWith("application/json")){
+        if (!conn.getContentType().startsWith("application/json")) {
             throw new MalformedURLException("Not an API URL");
         }
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return url;
     }
 
@@ -86,7 +86,7 @@ public class Solder implements Serializable {
             JsonReader rdr = Json.createReader(conn.getInputStream());
             JsonObject obj = rdr.readObject();
 
-            if(!obj.getString("error", "none").equals("none")){
+            if (!obj.getString("error", "none").equals("none")) {
                 throw new BuildNotFoundException("Build not Found");
             }
             modpack.overrideMinecraft(obj.getString("minecraft"));
@@ -100,7 +100,7 @@ public class Solder implements Serializable {
                                 Long.parseLong(o.getString("filesize")),
                                 o.getString("url")));
             }
-        } catch (MalformedURLException ignore){}
+        } catch (MalformedURLException ignore) {}
     }
 
     public String parseBuild(String build, Modpack modpack) throws IOException {
@@ -109,7 +109,7 @@ public class Solder implements Serializable {
 
         JsonReader rdr = Json.createReader(conn.getInputStream());
         JsonObject obj = rdr.readObject();
-        switch (build){
+        switch (build) {
             case "latest":
                 return obj.getString("latest");
             case "recommended":

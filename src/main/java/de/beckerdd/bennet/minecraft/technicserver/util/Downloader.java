@@ -6,8 +6,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /*
  * Created by bennet on 8/7/17.
@@ -61,10 +59,10 @@ public class Downloader {
 
             // update progress bar
             System.out.print("Downloading '" + path + "': [");
-            for(int i = 0; i < currentProgress/10; i++){
+            for(int i = 0; i < currentProgress/10; i++) {
                 System.out.print("#");
             }
-            for(int i = 0; i < 10-currentProgress/10; i++){
+            for(int i = 0; i < 10-currentProgress/10; i++) {
                 System.out.print(" ");
             }
             System.out.print("] " + currentProgress + "%\r");*/
@@ -99,7 +97,7 @@ public class Downloader {
         downloadFile(url, path);
         FileInputStream fis = new FileInputStream(new File(path));
 
-        if(!DigestUtils.md5Hex(fis).equalsIgnoreCase(md5)){
+        if (!DigestUtils.md5Hex(fis).equalsIgnoreCase(md5)) {
             throw new DownloadException("MD5 sum missmatch");
         }
     }
@@ -119,60 +117,28 @@ public class Downloader {
 
     public static class DownloadException extends IOException{
         /**
-         * Constructs an {@code DownloadException} with {@code null}
-         * as its error detail message.
+         * {@inheritDoc}
          */
         public DownloadException() {
             super();
         }
 
         /**
-         * Constructs an {@code DownloadException} with the specified detail message.
-         *
-         * @param message
-         *        The detail message (which is saved for later retrieval
-         *        by the {@link #getMessage()} method)
+         * {@inheritDoc}
          */
         public DownloadException(String message) {
             super(message);
         }
 
         /**
-         * Constructs an {@code DownloadException} with the specified detail message
-         * and cause.
-         *
-         * <p> Note that the detail message associated with {@code cause} is
-         * <i>not</i> automatically incorporated into this exception's detail
-         * message.
-         *
-         * @param message
-         *        The detail message (which is saved for later retrieval
-         *        by the {@link #getMessage()} method)
-         *
-         * @param cause
-         *        The cause (which is saved for later retrieval by the
-         *        {@link #getCause()} method).  (A null value is permitted,
-         *        and indicates that the cause is nonexistent or unknown.)
-         *
-         * @since 1.6
+         * {@inheritDoc}
          */
         public DownloadException(String message, Throwable cause) {
             super(message, cause);
         }
 
         /**
-         * Constructs an {@code DownloadException} with the specified cause and a
-         * detail message of {@code (cause==null ? null : cause.toString())}
-         * (which typically contains the class and detail message of {@code cause}).
-         * This constructor is useful for Download Exceptions that are little more
-         * than wrappers for other throwables.
-         *
-         * @param cause
-         *        The cause (which is saved for later retrieval by the
-         *        {@link #getCause()} method).  (A null value is permitted,
-         *        and indicates that the cause is nonexistent or unknown.)
-         *
-         * @since 1.6
+         * {@inheritDoc}
          */
         public DownloadException(Throwable cause) {
             super(cause);
