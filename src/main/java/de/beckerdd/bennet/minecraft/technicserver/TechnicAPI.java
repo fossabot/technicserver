@@ -69,10 +69,7 @@ public class TechnicAPI {
             throw new MalformedURLException("Not an API URL");
         }
 
-        if (!(state = new File("modpack.state")).exists()) {
-            Logging.logDebug("No State File Found");
-            modpack = new Modpack(conn.getInputStream());
-        } else {
+        if ((state = new File("modpack.state")).exists()) {
             Logging.logDebug("Loading old State");
             try {
                 FileInputStream fis = new FileInputStream(state);
@@ -88,6 +85,9 @@ public class TechnicAPI {
                 FileUtils.forceDelete(state);
                 System.exit(1);
             }
+        } else {
+            Logging.logDebug("No State File Found");
+            modpack = new Modpack(conn.getInputStream());
         }
     }
 
@@ -116,12 +116,7 @@ public class TechnicAPI {
             }
             PiwikTracker piwikTracker = new PiwikTracker(StaticConfig.PIWIK_URL);
 
-            if (Main.class.getPackage().getImplementationVersion() != null) {
-                piwikRequest.addCustomTrackingParameter("implementation-version",
-                        Main.class.getPackage().getImplementationVersion());
-                piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version",
-                        Main.class.getPackage().getImplementationVersion()), ruleCounter.incrementAndGet());
-            } else {
+            if (Main.class.getPackage().getImplementationVersion() == null) {
                 if (System.getenv("TRAVIS") != null && System.getenv("TRAVIS")
                         .equalsIgnoreCase("true")) {
                     piwikRequest.addCustomTrackingParameter("implementation-version",
@@ -135,6 +130,11 @@ public class TechnicAPI {
                     piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", "DEBUG-RUN"),
                             ruleCounter.incrementAndGet());
                 }
+            } else {
+                piwikRequest.addCustomTrackingParameter("implementation-version",
+                        Main.class.getPackage().getImplementationVersion());
+                piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version",
+                        Main.class.getPackage().getImplementationVersion()), ruleCounter.incrementAndGet());
             }
 
             piwikRequest.addCustomTrackingParameter("modpack-url", UserConfig.getUrl());
@@ -195,8 +195,11 @@ public class TechnicAPI {
      * Delete Client-Only Mods which may cause trouble with the Server
      */
     public void cleanClientMods() {
-        try {
-            for (File child : new File("mods/").listFiles()) {
+        File[] modsDir = new File("mods/").listFiles();
+        if (modsDir == null) {
+            Logging.logErr("Ohh, your seams mods folder empty o.Ô");
+        } else {
+            for (File child : modsDir) {
                 if (ClientMod.isClientMod(child.getName())) {
                     Logging.log("Deleting Clientmod-File " + child.getName());
                     if (child.isDirectory()) {
@@ -210,8 +213,6 @@ public class TechnicAPI {
                     }
                 }
             }
-        } catch (NullPointerException ignore) {
-            Logging.logErr("Ohh, your seams mods folder empty o.Ô");
         }
     }
 

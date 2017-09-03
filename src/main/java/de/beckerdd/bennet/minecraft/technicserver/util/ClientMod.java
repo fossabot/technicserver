@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * Static Class for detecting a "Client Mod" by it's ZIP Name
  */
-public class ClientMod {
+public final class ClientMod {
     /**
      * Set of Strings with Client Mod name Regualar Expressions
      */
@@ -45,6 +45,11 @@ public class ClientMod {
         add("^SoundFilters.*jar$");
         add("^ShadersModCore-.*jar");
     }};
+
+    /**
+     * Prevent initialization
+     */
+    private ClientMod() { }
 
     /**
      * Check weather the Mod supplied by it's Name matches the known Client Mods

@@ -269,9 +269,7 @@ public class Modpack implements Serializable {
     public Modpack downloadAll() throws IOException {
         FileUtils.forceMkdir(new File("cache/"));
 
-        if (solder != null) {
-            downloadAllViaSolder();
-        } else {
+        if (solder == null) {
             if (state == State.INSTALLED_UPDATEABLE) {
                 modFiles.get("package").parallelStream().forEach(fn -> {
                     try {
@@ -285,6 +283,8 @@ public class Modpack implements Serializable {
             }
             Downloader.downloadFile(url, "cache/package.zip");
             buildInstalled = version;
+        } else {
+            downloadAllViaSolder();
         }
         return this;
     }

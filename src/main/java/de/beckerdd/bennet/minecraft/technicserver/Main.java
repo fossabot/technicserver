@@ -33,7 +33,12 @@ import java.util.Date;
 /**
  * Main Class. Containing the Programs entry point
  */
-public class Main {
+public final class Main {
+
+    /**
+     * This is the Main Class!
+     */
+    private Main() {}
 
     /**
      * Main entry Point.
@@ -55,10 +60,10 @@ public class Main {
 
             TechnicAPI technicAPI = new TechnicAPI(UserConfig.getUrl());
 
-            if (technicAPI.getModpack().getState() != Modpack.State.INSTALLED_UPTODATE) {
-                technicAPI.updatePack(Arrays.stream(args).anyMatch(a -> a.equalsIgnoreCase("update")));
-            } else {
+            if (technicAPI.getModpack().getState() == Modpack.State.INSTALLED_UPTODATE) {
                 Logging.log("Modpack is upto-date");
+            } else {
+                technicAPI.updatePack(Arrays.stream(args).anyMatch(a -> a.equalsIgnoreCase("update")));
             }
 
             technicAPI.saveState();

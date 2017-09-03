@@ -42,4 +42,9 @@ public final class StaticConfig {
      * Minecraft Server JAR Download URL Pattern
      */
     public static String MINECRAFT_JAR_PATTERN = "https://s3.amazonaws.com/Minecraft.Download/versions/{MCVER}/minecraft_server.{MCVER}.jar";
+
+    /**
+     * Prevent initialization
+     */
+    private StaticConfig() {}
 }

@@ -30,9 +30,15 @@ import java.util.zip.ZipInputStream;
 /**
  * Static class for Extracting ZIP Files
  */
-public class Extractor {
-    private final static int ZIP_BUFFER_SIZE = 2048;
-    private final static int XZ_BUFFER_SIZE = 8192;
+public final class Extractor {
+    private static final int ZIP_BUFFER_SIZE = 2048;
+    private static final int XZ_BUFFER_SIZE = 8192;
+
+    /**
+     * Prevent initialization
+     */
+    private Extractor() {}
+
     /**
      * Extract a ZIP Stream
      * @param fis FileInputStream to the File

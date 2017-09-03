@@ -85,6 +85,6 @@ public class MinecraftVerion implements Serializable {
      * @return version string
      */
     @Override public String toString() {
-        return minor != 0 ? "1." + major + "." + minor : "1." + major;
+        return minor == 0 ? "1." + major : "1." + major + "." + minor;
     }
 }

@@ -18,7 +18,7 @@ package de.beckerdd.bennet.minecraft.technicserver.util;/*
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class ANSIColor {
+public final class ANSIColor {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -36,4 +36,9 @@ public class ANSIColor {
     public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
     public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+
+    /**
+     * Prevent initialization
+     */
+    private ANSIColor() {};
 }

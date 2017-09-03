@@ -30,9 +30,15 @@ import java.net.URL;
 /**
  * Static Class for handling Downloads
  */
-public class Downloader {
+public final class Downloader {
 
     private final static int DOWNLOAD_BUFFER_SIZE = 1024;
+
+    /**
+     * Prevent initialization
+     */
+    private Downloader() {}
+
     /**
      * Download a File
      * @param url URL to the File

@@ -93,13 +93,12 @@ public class Mod implements Serializable {
      * @throws IOException Download Failed
      */
     public Mod download() throws IOException {
-        if (!(new File(cacheFilename)).exists() ||
-                !DigestUtils.md5Hex(new FileInputStream(new File(cacheFilename))).equalsIgnoreCase(md5)) {
-            URL url = new URL(this.url);
-
-            Downloader.downloadFile(url, cacheFilename, md5);
+        if ((new File(cacheFilename)).exists() &&
+                DigestUtils.md5Hex(new FileInputStream(new File(cacheFilename))).equalsIgnoreCase(md5)) {
+                    Logging.log("File " + cacheFilename + " cached. Skipping.");
         } else {
-            Logging.log("File " + cacheFilename + " cached. Skipping.");
+            URL url = new URL(this.url);
+            Downloader.downloadFile(url, cacheFilename, md5);
         }
         return this;
     }

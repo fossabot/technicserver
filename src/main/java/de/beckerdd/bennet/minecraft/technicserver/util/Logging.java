@@ -49,6 +49,8 @@ public final class Logging {
      */
     private PrintStream stdErr = System.err;
 
+    private static int CALLING_CLASS_ORDER_IN_STACKTRACE = 2;
+
     //private final String timezone = TimeZone.getDefault().getID();
 
     /**
@@ -80,9 +82,9 @@ public final class Logging {
      * @param logString Log Message
      */
     public static void log(String logString) {
-        String caller = Thread.currentThread().getStackTrace()[2].getClassName();
+        String caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE].getClassName();
         if (caller.equals(LoggingStream.class.getName())) {
-            caller = Thread.currentThread().getStackTrace()[3].getClassName();
+            caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE + 1].getClassName();
         }
         String logme = String.format("[%s] [OUT] [#%03d] [%s] %s",
                 new Date(),
@@ -97,9 +99,9 @@ public final class Logging {
      * @param logString Log Message
      */
     public static void logErr(String logString) {
-        String caller = Thread.currentThread().getStackTrace()[2].getClassName();
+        String caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE].getClassName();
         if (caller.equals(LoggingStream.class.getName())) {
-            caller = Thread.currentThread().getStackTrace()[3].getClassName();
+            caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE + 1].getClassName();
         }
         String logme = String.format("[%s] [ERR] [#%03d] [%s] %s",
                 new Date(),
@@ -114,9 +116,9 @@ public final class Logging {
      * @param logString Log Message
      */
     public static void logDebug(String logString) {
-        String caller = Thread.currentThread().getStackTrace()[2].getClassName();
+        String caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE].getClassName();
         if (caller.equals(LoggingStream.class.getName())) {
-            caller = Thread.currentThread().getStackTrace()[3].getClassName();
+            caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE + 1].getClassName();
         }
         String logme = String.format("[%s] [DBG] [#%03d] [%s] %s",
                 new Date(),
