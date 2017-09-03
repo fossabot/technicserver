@@ -1,6 +1,7 @@
-package de.beckerdd.bennet.minecraft.technicserver;
+package de.beckerdd.bennet.minecraft.technicserver.technic;
 
-import de.beckerdd.bennet.minecraft.technicserver.Helper.Logging;
+import de.beckerdd.bennet.minecraft.technicserver.config.UserConfig;
+import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -12,7 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.
@@ -48,14 +49,14 @@ public class Solder implements Serializable {
 
     public Solder(String solder) throws IOException {
         Logging.log("Install from Solder " + solder);
-        if(solder.endsWith("/")) {
+        if (solder.endsWith("/")) {
             url = solder.substring(0, solder.length() - 1);
-        }else {
+        } else {
             url = solder;
         }
 
         URLConnection conn = (new URL(url)).openConnection();
-        if(!conn.getContentType().startsWith("application/json")){
+        if (!conn.getContentType().startsWith("application/json")) {
             throw new MalformedURLException("Not an API URL");
         }
         JsonReader rdr = Json.createReader(conn.getInputStream());
@@ -66,26 +67,26 @@ public class Solder implements Serializable {
 
         conn = (new URL(url + "/modpack")).openConnection();
 
-        if(!conn.getContentType().startsWith("application/json")){
+        if (!conn.getContentType().startsWith("application/json")) {
             throw new MalformedURLException("Not an API URL");
         }
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return url;
     }
 
     public void initMods(Modpack modpack) throws IOException {
         try {
-            String build = parseBuild(Config.getBuild(), modpack);
+            String build = parseBuild(UserConfig.getBuild(), modpack);
             URL modURL = new URL(url + "/modpack/" + modpack.getName() + "/" + build);
             URLConnection conn = modURL.openConnection();
 
             JsonReader rdr = Json.createReader(conn.getInputStream());
             JsonObject obj = rdr.readObject();
 
-            if(!obj.getString("error", "none").equals("none")){
+            if (!obj.getString("error", "none").equals("none")) {
                 throw new BuildNotFoundException("Build not Found");
             }
             modpack.overrideMinecraft(obj.getString("minecraft"));
@@ -99,7 +100,7 @@ public class Solder implements Serializable {
                                 Long.parseLong(o.getString("filesize")),
                                 o.getString("url")));
             }
-        } catch (MalformedURLException ignore){}
+        } catch (MalformedURLException ignore) {}
     }
 
     public String parseBuild(String build, Modpack modpack) throws IOException {
@@ -108,7 +109,7 @@ public class Solder implements Serializable {
 
         JsonReader rdr = Json.createReader(conn.getInputStream());
         JsonObject obj = rdr.readObject();
-        switch (build){
+        switch (build) {
             case "latest":
                 return obj.getString("latest");
             case "recommended":
@@ -123,11 +124,14 @@ public class Solder implements Serializable {
         return url;
     }
 
-    public String getMirror_url() {
+    public String getMirrorUrl() {
         return mirror_url;
     }
 
-    public static class BuildNotFoundException extends IOException{
+    /**
+     * Specified Build was not Found
+     */
+    public static class BuildNotFoundException extends IOException {
         /**
          * Constructs an {@code BuildNotFoundException} with {@code null}
          * as its error detail message.

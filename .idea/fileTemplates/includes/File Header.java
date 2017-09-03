@@ -1,4 +1,4 @@
-/**
+/*
  * Created by ${USER} on ${DATE} ${TIME}.
  * 
  * ${PROJECT_NAME} - run modpacks from technicpack.net as server with ease.

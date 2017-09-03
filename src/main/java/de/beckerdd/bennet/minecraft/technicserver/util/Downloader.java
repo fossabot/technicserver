@@ -1,4 +1,4 @@
-package de.beckerdd.bennet.minecraft.technicserver.Helper;
+package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.
@@ -30,7 +30,15 @@ import java.net.URL;
 /**
  * Static Class for handling Downloads
  */
-public class Downloader {
+public final class Downloader {
+
+    private final static int DOWNLOAD_BUFFER_SIZE = 1024;
+
+    /**
+     * Prevent initialization
+     */
+    private Downloader() {}
+
     /**
      * Download a File
      * @param url URL to the File
@@ -38,29 +46,31 @@ public class Downloader {
      * @throws IOException throws if file not downloadable or destination not writeable
      */
     public static void downloadFile(URL url, String path) throws IOException {
-        HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
-        long completeFileSize = httpConnection.getContentLength();
+        FileUtils.forceMkdirParent(new File(path));
 
-        BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
-        FileOutputStream fos = new java.io.FileOutputStream(path);
-        BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
-        byte[] data = new byte[1024];
-        long downloadedFileSize = 0;
+        HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
+        //long completeFileSize = httpConnection.getContentLength();
+
+        BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
+        FileOutputStream fos = new FileOutputStream(path);
+        BufferedOutputStream bout = new BufferedOutputStream(fos, DOWNLOAD_BUFFER_SIZE);
+        byte[] data = new byte[DOWNLOAD_BUFFER_SIZE];
+        //long downloadedFileSize = 0;
 
         int x;
         Logging.log("starting package download from " + url);
-        while ((x = in.read(data, 0, 1024)) >= 0) {
-            downloadedFileSize += x;
+        while ((x = in.read(data, 0, DOWNLOAD_BUFFER_SIZE)) >= 0) {
+            //downloadedFileSize += x;
 
             /*// calculate progress
             int currentProgress = (int) ((((double)downloadedFileSize) / ((double)completeFileSize)) * 100.0);
 
             // update progress bar
             System.out.print("Downloading '" + path + "': [");
-            for(int i = 0; i < currentProgress/10; i++){
+            for(int i = 0; i < currentProgress/10; i++) {
                 System.out.print("#");
             }
-            for(int i = 0; i < 10-currentProgress/10; i++){
+            for(int i = 0; i < 10-currentProgress/10; i++) {
                 System.out.print(" ");
             }
             System.out.print("] " + currentProgress + "%\r");*/
@@ -94,7 +104,8 @@ public class Downloader {
     public static void downloadFile(URL url, String path, String md5) throws IOException {
         downloadFile(url, path);
         FileInputStream fis = new FileInputStream(new File(path));
-        if(!DigestUtils.md5Hex(fis).equalsIgnoreCase(md5)){
+
+        if (!DigestUtils.md5Hex(fis).equalsIgnoreCase(md5)) {
             throw new DownloadException("MD5 sum missmatch");
         }
     }
@@ -112,62 +123,33 @@ public class Downloader {
         downloadFile(new URL(url), path, md5);
     }
 
-    public static class DownloadException extends IOException{
+    /**
+     * Download Failure
+     */
+    public static class DownloadException extends IOException {
         /**
-         * Constructs an {@code DownloadException} with {@code null}
-         * as its error detail message.
+         * {@inheritDoc}
          */
         public DownloadException() {
             super();
         }
 
         /**
-         * Constructs an {@code DownloadException} with the specified detail message.
-         *
-         * @param message
-         *        The detail message (which is saved for later retrieval
-         *        by the {@link #getMessage()} method)
+         * {@inheritDoc}
          */
         public DownloadException(String message) {
             super(message);
         }
 
         /**
-         * Constructs an {@code DownloadException} with the specified detail message
-         * and cause.
-         *
-         * <p> Note that the detail message associated with {@code cause} is
-         * <i>not</i> automatically incorporated into this exception's detail
-         * message.
-         *
-         * @param message
-         *        The detail message (which is saved for later retrieval
-         *        by the {@link #getMessage()} method)
-         *
-         * @param cause
-         *        The cause (which is saved for later retrieval by the
-         *        {@link #getCause()} method).  (A null value is permitted,
-         *        and indicates that the cause is nonexistent or unknown.)
-         *
-         * @since 1.6
+         * {@inheritDoc}
          */
         public DownloadException(String message, Throwable cause) {
             super(message, cause);
         }
 
         /**
-         * Constructs an {@code DownloadException} with the specified cause and a
-         * detail message of {@code (cause==null ? null : cause.toString())}
-         * (which typically contains the class and detail message of {@code cause}).
-         * This constructor is useful for Download Exceptions that are little more
-         * than wrappers for other throwables.
-         *
-         * @param cause
-         *        The cause (which is saved for later retrieval by the
-         *        {@link #getCause()} method).  (A null value is permitted,
-         *        and indicates that the cause is nonexistent or unknown.)
-         *
-         * @since 1.6
+         * {@inheritDoc}
          */
         public DownloadException(Throwable cause) {
             super(cause);

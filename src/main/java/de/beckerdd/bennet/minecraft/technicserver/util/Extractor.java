@@ -1,11 +1,13 @@
-package de.beckerdd.bennet.minecraft.technicserver.Helper;
+package de.beckerdd.bennet.minecraft.technicserver.util;
+
+import org.tukaani.xz.XZInputStream;
 
 import java.io.*;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.
@@ -28,7 +30,15 @@ import java.util.zip.ZipInputStream;
 /**
  * Static class for Extracting ZIP Files
  */
-public class Extractor {
+public final class Extractor {
+    private static final int ZIP_BUFFER_SIZE = 2048;
+    private static final int XZ_BUFFER_SIZE = 8192;
+
+    /**
+     * Prevent initialization
+     */
+    private Extractor() {}
+
     /**
      * Extract a ZIP Stream
      * @param fis FileInputStream to the File
@@ -37,31 +47,31 @@ public class Extractor {
      */
     public static HashSet<String> extractZip(FileInputStream fis) throws IOException {
         HashSet<String> files = new HashSet<>();
-        int BUFFER = 2048;
-        BufferedOutputStream dest = null;
+        BufferedOutputStream dest;
         ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
         ZipEntry entry;
-        while((entry = zis.getNextEntry()) != null) {
+        while ((entry = zis.getNextEntry()) != null) {
             Logging.log("Extracting: " + entry);
             int count;
-            byte data[] = new byte[BUFFER];
+            byte data[] = new byte[ZIP_BUFFER_SIZE];
             // write the files to the disk
-            if(entry.isDirectory()){
+            if (entry.isDirectory()) {
                 Logging.logDebug(entry + " is Directory");
-                if(!(new File(entry.getName())).mkdir()){
+                if (!(new File(entry.getName())).mkdir()) {
                     Logging.logDebug("Directory exists");
                 }
                 continue;
             }
             FileOutputStream fos = new FileOutputStream(entry.getName());
-            dest = new BufferedOutputStream(fos, BUFFER);
-            while ((count = zis.read(data, 0, BUFFER)) != -1) {
+            dest = new BufferedOutputStream(fos, ZIP_BUFFER_SIZE);
+            while ((count = zis.read(data, 0, ZIP_BUFFER_SIZE)) != -1) {
                 dest.write(data, 0, count);
             }
             dest.flush();
             dest.close();
-            if(entry.isDirectory())
+            if (entry.isDirectory()) {
                 files.add(entry.getName());
+            }
         }
         zis.close();
         return files;
@@ -77,4 +87,26 @@ public class Extractor {
         return extractZip(new FileInputStream(filename));
     }
 
+    /**
+     * Extract XZ by Filename
+     * @param filename Path to XZ File
+     * @throws IOException Input or Output not readable/writeable
+     */
+    public static void extractXZ(String filename) throws IOException {
+        FileInputStream fis = new FileInputStream(filename);
+        BufferedInputStream in = new BufferedInputStream(fis);
+        FileOutputStream fos = new FileOutputStream(filename.substring(0, filename.lastIndexOf(".")));
+
+        XZInputStream xzis = new XZInputStream(in);
+        byte[] buffer = new byte[XZ_BUFFER_SIZE];
+        int count;
+
+        Logging.log("Extracting " + filename);
+        while ((count = xzis.read(buffer)) != -1) {
+            fos.write(buffer, 0, count);
+        }
+
+        fos.close();
+        xzis.close();
+    }
 }

@@ -1,9 +1,9 @@
-package de.beckerdd.bennet.minecraft.technicserver.Helper;
+package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-/**
+/*
  * Created by bennet on 8/7/17.
  *
  * technicserver - run modpacks from technicpack.net as server with ease.
@@ -38,7 +38,7 @@ public class LoggingStream extends PrintStream {
      * @param out Stream
      * @param isErr Error?
      */
-    public LoggingStream(OutputStream out, boolean isErr){
+    public LoggingStream(OutputStream out, boolean isErr) {
         super(out);
         this.isErr = isErr;
     }
@@ -47,10 +47,11 @@ public class LoggingStream extends PrintStream {
      * Redirect println to Logging Singelton
      * @param line Line to Print
      */
-    @Override public void println(String line){
-        if (isErr)
+    @Override public void println(String line) {
+        if (isErr) {
             Logging.logErr(line);
-        else
+        } else {
             Logging.log(line);
+        }
     }
 }
