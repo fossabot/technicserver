@@ -106,6 +106,7 @@ public class TechnicAPI {
     public void runAnalytics(String runtime, boolean force) {
         if (!UserConfig.isDisableAnalytics() || force) {
             PiwikRequest piwikRequest;
+            int ruleCounter = 0;
 
             try {
                 piwikRequest = new PiwikRequest(2, new URL(StaticConfig.PIWIK_PROPERTY));
@@ -116,30 +117,30 @@ public class TechnicAPI {
 
             if (Main.class.getPackage().getImplementationVersion() != null) {
                 piwikRequest.addCustomTrackingParameter("implementation-version", Main.class.getPackage().getImplementationVersion());
-                piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", Main.class.getPackage().getImplementationVersion()), 1);
+                piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", Main.class.getPackage().getImplementationVersion()), ruleCounter++);
             } else {
                 if (System.getenv("TRAVIS") != null && System.getenv("TRAVIS").equalsIgnoreCase("true")) {
                     piwikRequest.addCustomTrackingParameter("implementation-version",
                             "TRAVIS #" + System.getenv("TRAVIS_BUILD_NUMBER") +
                                     " @ " + System.getenv("TRAVIS_COMMIT"));
 
-                    piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", "TRAVIS"), 1);
+                    piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", "TRAVIS"), ruleCounter++);
                 } else {
                     piwikRequest.addCustomTrackingParameter("implementation-version", "DEBUG-RUN");
-                    piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", "DEBUG-RUN"), 1);
+                    piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", "DEBUG-RUN"), ruleCounter++);
                 }
             }
 
             piwikRequest.addCustomTrackingParameter("modpack-url", UserConfig.getUrl());
-            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-url", UserConfig.getUrl()), 2);
+            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-url", UserConfig.getUrl()), ruleCounter++);
             piwikRequest.addCustomTrackingParameter("modpack-desired-version", UserConfig.getBuild());
-            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-desired-version", UserConfig.getBuild()), 3);
+            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-desired-version", UserConfig.getBuild()), ruleCounter++);
             piwikRequest.addCustomTrackingParameter("modpack-autoupdate", UserConfig.isAutoupdate());
-            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-autoupdate", UserConfig.isAutoupdate() ? "true" : "false"), 4);
+            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-autoupdate", UserConfig.isAutoupdate() ? "true" : "false"), ruleCounter++);
             piwikRequest.addCustomTrackingParameter("modpack-name", modpack.getDisplayName());
-            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-name", modpack.getDisplayName()), 5);
+            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-name", modpack.getDisplayName()), ruleCounter++);
             piwikRequest.addCustomTrackingParameter("modpack-setuptime", runtime);
-            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-setuptime", runtime), 6);
+            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-setuptime", runtime), ruleCounter++);
 
             try {
                 piwikTracker.sendRequest(piwikRequest);

@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Class for installing the ForgeModloader Libraries
  */
 public class ForgeInstaller {
-    public static void installForge(InputStream inputStream) throws IOException{
+    public static void installForge(InputStream inputStream) throws IOException {
         JsonReader rdr = Json.createReader(inputStream);
         JsonObject obj = rdr.readObject();
 

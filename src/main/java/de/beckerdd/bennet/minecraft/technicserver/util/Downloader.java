@@ -31,6 +31,8 @@ import java.net.URL;
  * Static Class for handling Downloads
  */
 public class Downloader {
+
+    private final static int DOWNLOAD_BUFFER_SIZE = 1024;
     /**
      * Download a File
      * @param url URL to the File
@@ -45,13 +47,13 @@ public class Downloader {
 
         BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
         FileOutputStream fos = new FileOutputStream(path);
-        BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
-        byte[] data = new byte[1024];
+        BufferedOutputStream bout = new BufferedOutputStream(fos, DOWNLOAD_BUFFER_SIZE);
+        byte[] data = new byte[DOWNLOAD_BUFFER_SIZE];
         //long downloadedFileSize = 0;
 
         int x;
         Logging.log("starting package download from " + url);
-        while ((x = in.read(data, 0, 1024)) >= 0) {
+        while ((x = in.read(data, 0, DOWNLOAD_BUFFER_SIZE)) >= 0) {
             //downloadedFileSize += x;
 
             /*// calculate progress

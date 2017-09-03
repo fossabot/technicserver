@@ -389,8 +389,9 @@ public class Modpack implements Serializable {
      * @throws IOException fired by Malformed URLs
      */
     public void update(InputStream jsonStream) throws IOException {
-        if (state == null || state == State.NOT_INSTALLED)
+        if (state == null || state == State.NOT_INSTALLED) {
             throw new IllegalStateException();
+        }
 
         initSome(Json.createReader(jsonStream).readObject());
         if (((solder == null) && !(buildInstalled.equals(version))) ||

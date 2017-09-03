@@ -64,7 +64,7 @@ public class Main {
             technicAPI.saveState();
 
             technicAPI.runAnalytics(Double.toString(
-                            (startTime.getTime() - (new Date()).getTime()) / 1000 % 60
+                            (startTime.getTime() - (new Date()).getTime()) / 1000
                     ));
 
 
