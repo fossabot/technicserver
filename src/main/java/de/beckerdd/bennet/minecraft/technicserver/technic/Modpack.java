@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -50,23 +49,11 @@ public class Modpack implements Serializable {
     private String displayName;
     private String user;
     private URL url;
-    private String platformUrl;
     private MinecraftVerion minecraft;
-    private int ratings;
-    private int downloads;
-    private int runs;
-    private String description;
-    private HashSet<String> tags;
-    private boolean isServer;
-    private boolean isOfficial;
     private String version;
-    private boolean forceDir;
-    //private List<Feed> feed;
     private Resource icon;
     private Resource logo;
-    private Resource background;
     private Solder solder;
-    private Discord discordServerId;
     //endregion
 
     //region private Field - Pack
@@ -76,6 +63,8 @@ public class Modpack implements Serializable {
 
     private State state;
     private String buildInstalled;
+
+    public static final long serialVersionUID = 201709051908L;
 
     /**
      * Parse Modpack from JSON Stream
@@ -116,32 +105,15 @@ public class Modpack implements Serializable {
         name = obj.getString("name");
         displayName = obj.getString("displayName");
         user = obj.getString("user");
-        if (obj.getString("url", "").equals("")) {
-            url = null;
-        } else {
+
+        if (!obj.getString("url", "").equals("")) {
             url = new URL(obj.getString("url"));
         }
-        platformUrl = obj.getString("platformUrl");
+
         minecraft = new MinecraftVerion(obj.getString("minecraft"));
-        ratings = obj.getInt("ratings");
-        downloads = Integer.parseInt(obj.getString("downloads"));
-        runs = Integer.parseInt(obj.getString("runs"));
-        description = obj.getString("description");
-        tags = new HashSet<>();
-        tags.addAll(Arrays.asList(obj.getString("tags").split(",")));
-        isServer = obj.getBoolean("isServer");
-        isOfficial = obj.getBoolean("isOfficial");
         version = obj.getString("version");
-        forceDir = obj.getBoolean("forceDir");
-        //feed = null; //TODO
         icon = new Resource(obj.getJsonObject("icon"));
         logo = new Resource(obj.getJsonObject("logo"));
-        background = new Resource(obj.getJsonObject("background"));
-        if (obj.getString("discordServerId", "").equals("")) {
-            discordServerId = null;
-        } else {
-            discordServerId = new Discord(obj.getString("discordServerId"));
-        }
     }
 
     //region Getters
@@ -173,64 +145,8 @@ public class Modpack implements Serializable {
         return url;
     }
 
-    public String getPlatformUrl() {
-        return platformUrl;
-    }
-
-    public int getRatings() {
-        return ratings;
-    }
-
-    public int getDownloads() {
-        return downloads;
-    }
-
-    public int getRuns() {
-        return runs;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public HashSet<String> getTags() {
-        return tags;
-    }
-
-    public boolean isServer() {
-        return isServer;
-    }
-
-    public boolean isOfficial() {
-        return isOfficial;
-    }
-
     public String getVersion() {
         return version;
-    }
-
-    public boolean isForceDir() {
-        return forceDir;
-    }
-
-    /*public List<Feed> getFeed() {
-        return feed;
-    }*/
-
-    public Resource getLogo() {
-        return logo;
-    }
-
-    public Resource getBackground() {
-        return background;
-    }
-
-    public Solder getSolder() {
-        return solder;
-    }
-
-    public Discord getDiscordServerId() {
-        return discordServerId;
     }
 
     public HashMap<String, HashSet<String>> getModFiles() {
@@ -245,7 +161,18 @@ public class Modpack implements Serializable {
         return buildInstalled;
     }
 
-    //endregion
+    public Resource getLogo() {
+        return logo;
+    }
+
+    public Solder getSolder() {
+        return solder;
+    }
+
+    public HashSet<Mod> getMods() {
+        return mods;
+    }
+//endregion
 
     public void overrideMinecraft(String minecraft) {
         this.minecraft = new MinecraftVerion(minecraft);
@@ -345,6 +272,7 @@ public class Modpack implements Serializable {
         } else {
             modsToDownload = new HashSet<>(mods);
         }
+
         modsToDownload.parallelStream().forEach(mod -> {
             try {
                 mod.download();

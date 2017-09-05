@@ -41,6 +41,8 @@ public class MinecraftVerion implements Serializable {
      */
     private int minor;
 
+    public static final long serialVersionUID = 201709051908L;
+
     /**
      * Setup this very fancy class
      * @param versionString original version string such as "1.7.10"

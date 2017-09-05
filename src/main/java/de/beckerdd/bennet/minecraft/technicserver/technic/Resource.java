@@ -42,6 +42,8 @@ public class Resource implements Serializable {
      */
     private String md5;
 
+    public static final long serialVersionUID = 201709051908L;
+
     /**
      * Parse the JSON Object to initializie the Resource
      * @param jsonObject JsonObject to parse

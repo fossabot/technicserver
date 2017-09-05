@@ -47,6 +47,8 @@ public class Solder implements Serializable {
      */
     private String mirror_url;
 
+    public static final long serialVersionUID = 201709051908L;
+
     public Solder(String solder) throws IOException {
         Logging.log("Install from Solder " + solder);
         if (solder.endsWith("/")) {

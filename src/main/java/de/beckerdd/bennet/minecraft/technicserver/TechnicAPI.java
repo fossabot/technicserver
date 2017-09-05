@@ -105,58 +105,56 @@ public class TechnicAPI {
      * @param force override user config
      */
     public void runAnalytics(String runtime, boolean force) {
-        if (!UserConfig.isDisableAnalytics() || force) {
-            PiwikRequest piwikRequest;
-            AtomicInteger ruleCounter = new AtomicInteger(0);
-
-            try {
-                piwikRequest = new PiwikRequest(2, new URL(StaticConfig.PIWIK_PROPERTY));
-            } catch (MalformedURLException e) {
-                return;
-            }
-            PiwikTracker piwikTracker = new PiwikTracker(StaticConfig.PIWIK_URL);
-
-            if (Main.class.getPackage().getImplementationVersion() == null) {
-                if (System.getenv("TRAVIS") != null && System.getenv("TRAVIS")
-                        .equalsIgnoreCase("true")) {
-                    piwikRequest.addCustomTrackingParameter("implementation-version",
-                            "TRAVIS #" + System.getenv("TRAVIS_BUILD_NUMBER") +
-                                    " @ " + System.getenv("TRAVIS_COMMIT"));
-
-                    piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", "TRAVIS"),
-                            ruleCounter.incrementAndGet());
-                } else {
-                    piwikRequest.addCustomTrackingParameter("implementation-version", "DEBUG-RUN");
-                    piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version", "DEBUG-RUN"),
-                            ruleCounter.incrementAndGet());
-                }
-            } else {
-                piwikRequest.addCustomTrackingParameter("implementation-version",
-                        Main.class.getPackage().getImplementationVersion());
-                piwikRequest.setPageCustomVariable(new CustomVariable("implementation-version",
-                        Main.class.getPackage().getImplementationVersion()), ruleCounter.incrementAndGet());
-            }
-
-            piwikRequest.addCustomTrackingParameter("modpack-url", UserConfig.getUrl());
-            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-url", UserConfig.getUrl()),
-                    ruleCounter.incrementAndGet());
-            piwikRequest.addCustomTrackingParameter("modpack-desired-version", UserConfig.getBuild());
-            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-desired-version", UserConfig.getBuild()),
-                    ruleCounter.incrementAndGet());
-            piwikRequest.addCustomTrackingParameter("modpack-autoupdate", UserConfig.isAutoupdate());
-            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-autoupdate",
-                    UserConfig.isAutoupdate() ? "true" : "false"), ruleCounter.incrementAndGet());
-            piwikRequest.addCustomTrackingParameter("modpack-name", modpack.getDisplayName());
-            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-name", modpack.getDisplayName()),
-                    ruleCounter.incrementAndGet());
-            piwikRequest.addCustomTrackingParameter("modpack-setuptime", runtime);
-            piwikRequest.setPageCustomVariable(new CustomVariable("modpack-setuptime", runtime),
-                    ruleCounter.incrementAndGet());
-
-            try {
-                piwikTracker.sendRequest(piwikRequest);
-            } catch (IOException ignore) {  }
+        if (UserConfig.isDisableAnalytics() && !force) {
+            //Abort if disabled
+            return;
         }
+
+        PiwikRequest piwikRequest;
+        AtomicInteger ruleCounter = new AtomicInteger(0);
+
+        try {
+            piwikRequest = new PiwikRequest(StaticConfig.PIWIK_SITE_ID, new URL(StaticConfig.PIWIK_PROPERTY));
+        } catch (MalformedURLException e) {
+            //Abort on fail
+            return;
+        }
+        PiwikTracker piwikTracker = new PiwikTracker(StaticConfig.PIWIK_URL);
+
+        String implementation_version = Main.class.getPackage().getImplementationVersion();
+
+        if (implementation_version == null) {
+            if (System.getenv("TRAVIS") == null) {
+                implementation_version = "DEBUG_RUN";
+            } else {
+                implementation_version = "TRAVIS_CI_RUN";
+            }
+        }
+
+        piwikRequest.addCustomTrackingParameter("implementation-version",implementation_version);
+        piwikRequest.setPageCustomVariable(
+                new CustomVariable("implementation-version", implementation_version),
+                ruleCounter.incrementAndGet());
+
+        piwikRequest.addCustomTrackingParameter("modpack-url", UserConfig.getUrl());
+        piwikRequest.setPageCustomVariable(new CustomVariable("modpack-url", UserConfig.getUrl()),
+                ruleCounter.incrementAndGet());
+        piwikRequest.addCustomTrackingParameter("modpack-desired-version", UserConfig.getBuild());
+        piwikRequest.setPageCustomVariable(new CustomVariable("modpack-desired-version", UserConfig.getBuild()),
+                ruleCounter.incrementAndGet());
+        piwikRequest.addCustomTrackingParameter("modpack-autoupdate", UserConfig.isAutoupdate());
+        piwikRequest.setPageCustomVariable(new CustomVariable("modpack-autoupdate",
+                UserConfig.isAutoupdate() ? "true" : "false"), ruleCounter.incrementAndGet());
+        piwikRequest.addCustomTrackingParameter("modpack-name", modpack.getDisplayName());
+        piwikRequest.setPageCustomVariable(new CustomVariable("modpack-name", modpack.getDisplayName()),
+                ruleCounter.incrementAndGet());
+        piwikRequest.addCustomTrackingParameter("modpack-setuptime", runtime);
+        piwikRequest.setPageCustomVariable(new CustomVariable("modpack-setuptime", runtime),
+                ruleCounter.incrementAndGet());
+
+        try {
+            piwikTracker.sendRequest(piwikRequest);
+        } catch (IOException ignore) {  }
     }
 
     /**
@@ -194,23 +192,21 @@ public class TechnicAPI {
     /**
      * Delete Client-Only Mods which may cause trouble with the Server
      */
-    public void cleanClientMods() {
+    public void cleanClientMods() throws IOException {
         File[] modsDir = new File("mods/").listFiles();
         if (modsDir == null) {
             Logging.logErr("Ohh, your seams mods folder empty o.Ô");
-        } else {
-            for (File child : modsDir) {
-                if (ClientMod.isClientMod(child.getName())) {
-                    Logging.log("Deleting Clientmod-File " + child.getName());
-                    if (child.isDirectory()) {
-                        try {
-                            FileUtils.deleteDirectory(child);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        child.delete();
-                    }
+            //Mods-dir empty; abort!
+            return;
+        }
+
+        for (File child : modsDir) {
+            if (ClientMod.isClientMod(child.getName())) {
+                Logging.log("Deleting Clientmod-File " + child.getName());
+                if (child.isDirectory()) {
+                    FileUtils.deleteDirectory(child);
+                } else {
+                    FileUtils.forceDelete(child);
                 }
             }
         }

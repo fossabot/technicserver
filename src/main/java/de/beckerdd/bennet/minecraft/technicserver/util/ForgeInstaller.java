@@ -1,7 +1,6 @@
 package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import de.beckerdd.bennet.minecraft.technicserver.config.StaticConfig;
-import org.apache.commons.io.FileUtils;
 
 import javax.json.Json;
 import javax.json.JsonObject;

@@ -32,7 +32,10 @@ public final class StaticConfig {
      * Piwik Page URL
      */
     public static String PIWIK_PROPERTY = "http://technicserver.minecraft.bennet.becker-dd.de/java";
-
+    /**
+     * Piwik Site ID
+     */
+    public static int PIWIK_SITE_ID = 2;
     /**
      * Minecraft Default Maven Repo for Forge installer
      */

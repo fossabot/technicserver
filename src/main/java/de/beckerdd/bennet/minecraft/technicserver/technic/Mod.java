@@ -67,6 +67,8 @@ public class Mod implements Serializable {
      */
     private final String cacheFilename;
 
+    public static final long serialVersionUID = 201709051908L;
+
     /**
      * Setup a mod by it's parameters
      * @param name Mod name
