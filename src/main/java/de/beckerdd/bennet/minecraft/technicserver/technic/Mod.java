@@ -49,10 +49,6 @@ public class Mod implements Serializable {
      */
     private final String md5;
     /**
-     * Downloadfile size
-     */
-    private final long filesize;
-    /**
      * Download url
      */
     private final String url;
@@ -81,7 +77,6 @@ public class Mod implements Serializable {
         this.name = name;
         this.version = version;
         this.md5 = md5;
-        this.filesize = filesize;
         this.url = url;
 
         cacheFilename = "cache/" + name + "-" + version + ".zip";

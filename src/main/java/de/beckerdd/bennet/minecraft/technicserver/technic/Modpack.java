@@ -290,7 +290,9 @@ public class Modpack implements Serializable {
      * @throws IOException Source File or Destination Path are unreadable/writeable
      */
     public Modpack extractAll() throws IOException {
-        if (solder != null) {
+        if (solder == null) {
+            modFiles.put("package", Extractor.extractZip("cache/package.zip"));
+        } else {
             mods.parallelStream().forEach(mod -> {
                 try {
                     mod.extract();
@@ -304,8 +306,6 @@ public class Modpack implements Serializable {
                 mods = new HashSet<>();
                 solder.initMods(this);
             }
-        } else {
-            modFiles.put("package", Extractor.extractZip("cache/package.zip"));
         }
         state = State.INSTALLED_UPTODATE;
         return this;

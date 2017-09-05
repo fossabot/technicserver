@@ -37,7 +37,7 @@ public final class Extractor {
     /**
      * Prevent initialization
      */
-    private Extractor() {}
+    private Extractor() { }
 
     /**
      * Extract a ZIP Stream

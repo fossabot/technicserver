@@ -102,7 +102,7 @@ public class Solder implements Serializable {
                                 Long.parseLong(o.getString("filesize")),
                                 o.getString("url")));
             }
-        } catch (MalformedURLException ignore) {}
+        } catch (MalformedURLException ignore) { }
     }
 
     public String parseBuild(String build, Modpack modpack) throws IOException {

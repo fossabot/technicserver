@@ -80,7 +80,7 @@ public class TechnicAPI {
                 fis.close();
 
                 modpack.update(conn.getInputStream());
-            } catch (Exception ignore) {
+            } catch (ClassNotFoundException | InvalidClassException ignore) {
                 Logging.logErr("STATE FILE INVALID! PLEASE RESTART!");
                 FileUtils.forceDelete(state);
                 System.exit(1);
