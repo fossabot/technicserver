@@ -41,6 +41,7 @@ public final class ForgeInstaller {
    * Prevent initialization.
    */
   private ForgeInstaller() { }
+
   /**
    * Install Forge Modloader.
    * @param inputStream InputSteam to contained version.json

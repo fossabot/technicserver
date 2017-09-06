@@ -113,7 +113,6 @@ public class Solder implements Serializable {
               o.getString("name"),
               o.getString("version"),
               o.getString("md5"),
-              Long.parseLong(o.getString("filesize")),
               o.getString("url")));
     }
   }

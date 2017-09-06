@@ -153,7 +153,7 @@ public final class Logging {
   }
 
   /**
-   * Logging Tag
+   * Logging Tag.
    */
   private enum  LoggingTag {
     OUT,

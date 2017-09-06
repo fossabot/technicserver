@@ -39,6 +39,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 @SuppressWarnings("ALL")
 public class Mod implements Serializable {
   /**
+   * Serialization UID.
+   */
+  public static final long serialVersionUID = 201709062253L;
+  /**
    * Name of the Mod.
    */
   private final String name;
@@ -66,19 +70,13 @@ public class Mod implements Serializable {
   private final String cacheFilename;
 
   /**
-   * Serialization UID.
-   */
-  public static final long serialVersionUID = 201709051908L;
-
-  /**
    * Setup a mod by it's parameters.
    * @param name Mod name
    * @param version Mod version
    * @param md5 Download File MD5
-   * @param filesize Download File size
    * @param url Download URL
    */
-  public Mod(String name, String version, String md5, long filesize, String url) {
+  public Mod(String name, String version, String md5, String url) {
     this.name = name;
     this.version = version;
     this.md5 = md5;

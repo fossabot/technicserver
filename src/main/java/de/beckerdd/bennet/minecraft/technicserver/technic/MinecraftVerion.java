@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 public class MinecraftVerion implements Serializable {
 
   /**
-   * Serialization UID
+   * Serialization UID.
    */
   public static final long serialVersionUID = 201709051908L;
   /**
@@ -52,8 +52,8 @@ public class MinecraftVerion implements Serializable {
    */
   public MinecraftVerion(String versionString) {
     String[] ver = versionString.split(Pattern.quote("."));
-    int versionMaxLength = 3;
-    int versionMinLength = 2;
+    final int versionMaxLength = 3;
+    final int versionMinLength = 2;
     if (ver.length > versionMaxLength || ver.length < versionMinLength) {
       throw new MalformedParametersException("Invalid Minecraft Version String");
     }
