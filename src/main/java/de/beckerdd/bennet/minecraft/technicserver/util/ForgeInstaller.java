@@ -2,15 +2,16 @@ package de.beckerdd.bennet.minecraft.technicserver.util;
 
 import de.beckerdd.bennet.minecraft.technicserver.config.StaticConfig;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
 
 /*
  * Created by Bennet on 31/08/2017 15:40.
@@ -33,85 +34,79 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 /**
- * Class for installing the ForgeModloader Libraries
+ * Class for installing the ForgeModloader Libraries.
  */
 public final class ForgeInstaller {
-    /**
-     * Prevent initialization
-     */
-    private ForgeInstaller() {}
-    /**
-     * Install Forge Modloader
-     * @param inputStream InputSteam to contained version.json
-     * @throws IOException Download failed!
-     */
-    public static void installForge(InputStream inputStream) throws IOException {
-        JsonReader rdr = Json.createReader(inputStream);
-        JsonObject obj = rdr.readObject();
+  /**
+   * Install Forge Modloader.
+   * @param inputStream InputSteam to contained version.json
+   * @throws IOException Download failed!
+   */
+  public static void installForge(InputStream inputStream) throws IOException {
+    JsonReader rdr = Json.createReader(inputStream);
+    JsonObject obj = rdr.readObject();
 
-        AtomicBoolean success = new AtomicBoolean(true);
-        //for(JsonValue jVal : obj.getJsonArray("libraries")) {
-        obj.getJsonArray("libraries").parallelStream().forEach( jVal -> {
-            JsonObject lib = (JsonObject) jVal;
+    AtomicBoolean success = new AtomicBoolean(true);
+    //for(JsonValue jVal : obj.getJsonArray("libraries")) {
+    obj.getJsonArray("libraries").parallelStream().forEach(jVal -> {
+      JsonObject lib = (JsonObject) jVal;
 
-            //We wan't to skip unnecessary libs
-            if (!lib.getBoolean("serverreq", false)) {
-                return;
-            }
+      //We wan't to skip unnecessary libs
+      if (!lib.getBoolean("serverreq", false)) {
+        return;
+      }
 
-            Logging.log("Start downloading Forge Library '" + lib.getString("name") + "'");
-            String[] maven = lib.getString("name").split(":");
-            maven[0] = maven[0].replace(".", "/");
+      Logging.log("Start downloading Forge Library '" + lib.getString("name") + "'");
+      String[] maven = lib.getString("name").split(":");
+      maven[0] = maven[0].replace(".", "/");
 
-            String pathname = String.join("/", maven);
-            String filename = String.format("%s-%s.jar", maven[1], maven[2]);
-            String baseurl = lib.getString("url", StaticConfig.LIBRARIES_URL);
-            String url;
-            if (baseurl.endsWith("/")) {
-                url = String.format("%s%s/%s", lib.getString("url", StaticConfig.LIBRARIES_URL), pathname, filename);
-            } else {
-                url = String.format("%s/%s/%s", lib.getString("url", StaticConfig.LIBRARIES_URL), pathname, filename);
-            }
+      String pathname = String.join("/", maven);
+      String filename = String.format("%s-%s.jar", maven[1], maven[2]);
+      String baseurl = lib.getString("url", StaticConfig.LIBRARIES_URL);
+      String url;
+      if (baseurl.endsWith("/")) {
+        url = String.format("%s%s/%s",
+            lib.getString("url", StaticConfig.LIBRARIES_URL), pathname, filename);
+      } else {
+        url = String.format("%s/%s/%s",
+            lib.getString("url", StaticConfig.LIBRARIES_URL), pathname, filename);
+      }
 
-            LinkedList<String> checksums = null;
-            if (lib.getJsonArray("checksums") != null) {
-                checksums = new LinkedList<>();
-                for (JsonValue v : lib.getJsonArray("checksums")) {
-                    checksums.add(v.toString());
-                }
-            }
-
-            try {
-                String downloadFile;
-                try {
-                    downloadFile = String.join("/", "libraries", pathname, filename);
-                    Downloader.downloadFile(url, downloadFile);
-
-                } catch (IOException ignore) {
-                    downloadFile = String.join("/", "libraries", pathname, filename + ".pack.xz");
-                    Downloader.downloadFile(url + ".pack.xz", downloadFile);
-                    Extractor.extractXZ(downloadFile);
-                    new File(downloadFile).renameTo(
-                            new File(downloadFile.substring(0, downloadFile.lastIndexOf("."))));
-                }
-                /*if (checksums != null) {
-                    String checksum = DigestUtils.sha1Hex(new FileInputStream(downloadFile));
-                    if (checksums.stream().noneMatch(c -> c.equalsIgnoreCase(checksum))) {
-                        //throw new Downloader.DownloadException("SHA1 Sum Missmatch");
-                        Logging.logErr("SHA1 sum seams to missmatch for " + lib.getString("name") +
-                                " expected one of {" + String.join(", ", checksums) + "}, got " +
-                                DigestUtils.sha1Hex(new FileInputStream(downloadFile)));
-                    }
-                }*/
-            } catch (IOException e) {
-                success.set(false);
-                Logging.logErr("Failed downloading Forge Library '" + lib.getString("name") + "'!");
-                e.printStackTrace();
-            }
-        });
-
-        if (!success.get()) {
-            throw new IOException("ForgeInstaller Failed");
+      LinkedList<String> checksums = null;
+      if (lib.getJsonArray("checksums") != null) {
+        checksums = new LinkedList<>();
+        for (JsonValue v : lib.getJsonArray("checksums")) {
+          checksums.add(v.toString());
         }
+      }
+
+      try {
+        String downloadFile;
+        try {
+          downloadFile = String.join("/", "libraries", pathname, filename);
+          Downloader.downloadFile(url, downloadFile);
+
+        } catch (IOException ignore) {
+          downloadFile = String.join("/", "libraries", pathname, filename + ".pack.xz");
+          Downloader.downloadFile(url + ".pack.xz", downloadFile);
+          Extractor.extractXz(downloadFile);
+          new File(downloadFile).renameTo(
+              new File(downloadFile.substring(0, downloadFile.lastIndexOf("."))));
+        }
+      } catch (IOException e) {
+        success.set(false);
+        Logging.logErr("Failed downloading Forge Library '" + lib.getString("name") + "'!");
+        e.printStackTrace();
+      }
+    });
+
+    if (!success.get()) {
+      throw new IOException("ForgeInstaller Failed");
     }
+  }
+
+  /**
+   * Prevent initialization.
+   */
+  private ForgeInstaller() { }
 }

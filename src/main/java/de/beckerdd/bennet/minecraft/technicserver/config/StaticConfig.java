@@ -21,33 +21,33 @@ package de.beckerdd.bennet.minecraft.technicserver.config;
  */
 
 /**
- * Static Application Config
+ * Static Application Config.
  */
 public final class StaticConfig {
-    /**
-     * URL of the Piwik Server
-     */
-    public static String PIWIK_URL = "https://piwik.becker-dd.de/piwik.php";
-    /**
-     * Piwik Page URL
-     */
-    public static String PIWIK_PROPERTY = "http://technicserver.minecraft.bennet.becker-dd.de/java";
-    /**
-     * Piwik Site ID
-     */
-    public static int PIWIK_SITE_ID = 2;
-    /**
-     * Minecraft Default Maven Repo for Forge installer
-     */
-    public static String LIBRARIES_URL = "https://libraries.minecraft.net/";
+  /**
+   * URL of the Piwik Server.
+   */
+  public static final String PIWIK_URL = "https://piwik.becker-dd.de/piwik.php";
+  /**
+   * Piwik Page URL.
+   */
+  public static final String PIWIK_PROPERTY = "http://technicserver.minecraft.bennet.becker-dd.de/java";
+  /**
+   * Piwik Site ID.
+   */
+  public static final int PIWIK_SITE_ID = 2;
+  /**
+   * Minecraft Default Maven Repo for Forge installer.
+   */
+  public static final String LIBRARIES_URL = "https://libraries.minecraft.net/";
 
-    /**
-     * Minecraft Server JAR Download URL Pattern
-     */
-    public static String MINECRAFT_JAR_PATTERN = "https://s3.amazonaws.com/Minecraft.Download/versions/{MCVER}/minecraft_server.{MCVER}.jar";
+  /**
+   * Minecraft Server JAR Download URL Pattern.
+   */
+  public static final String MINECRAFT_JAR_PATTERN = "https://s3.amazonaws.com/Minecraft.Download/versions/{MCVER}/minecraft_server.{MCVER}.jar";
 
-    /**
-     * Prevent initialization
-     */
-    private StaticConfig() {}
+  /**
+   * Prevent initialization.
+   */
+  private StaticConfig() { }
 }

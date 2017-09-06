@@ -32,134 +32,137 @@ import java.util.Properties;
 /**
  * Singelton for Reading modpack.properties
  */
+@SuppressWarnings("ALL")
 public final class UserConfig {
-    /**
-     * Singelton Instance
-     */
-    private static UserConfig instance = new UserConfig();
-    /**
-     * Parameter from propertiers File
-     */
-    private String url;
-    /**
-     * Parameter from propertiers File
-     */
-    private String build;
-    /**
-     * Parameter from propertiers File
-     */
-    private boolean autoupdate;
-    /**
-     * Parameter from propertiers File
-     */
-    private boolean disableAnalytics;
-    /**
-     * Parameter from propertiers File
-     */
-    private List<String> javaArgs;
+  /**
+   * Singelton Instance.
+   */
+  private static UserConfig instance = new UserConfig();
+  /**
+   * Parameter from propertiers File.
+   */
+  private String url;
+  /**
+   * Parameter from propertiers File.
+   */
+  private String build;
+  /**
+   * Parameter from propertiers File.
+   */
+  private boolean autoupdate;
+  /**
+   * Parameter from propertiers File.
+   */
+  private boolean disableAnalytics;
+  /**
+   * Parameter from propertiers File.
+   */
+  private List<String> javaArgs;
 
-    /**
-     * Private Singelton Constructor. Reading File and setting up Singelton
-     */
-    private UserConfig() {
-        FileInputStream input;
-        Properties properties = new Properties();
-        try {
-            input = new FileInputStream("modpack.properties");
-            properties.load(input);
-        } catch (IOException io) {
-            io.printStackTrace();
-            Logging.logErr("Failed to load UserConfig. Creating new!");
-            properties.setProperty("url", "");
-            properties.setProperty("build", "latest");
-            properties.setProperty("autoupdate", "no");
-            properties.setProperty("javaArgs", "-server -Xmx4G -XX:+DisableExplicitGC -XX:+AggressiveOpts");
+  /**
+   * Private Singelton Constructor. Reading File and setting up Singelton.
+   */
+  private UserConfig() {
+    FileInputStream input;
+    Properties properties = new Properties();
+    try {
+      input = new FileInputStream("modpack.properties");
+      properties.load(input);
+    } catch (IOException io) {
+      io.printStackTrace();
+      Logging.logErr("Failed to load UserConfig. Creating new!");
+      properties.setProperty("url", "");
+      properties.setProperty("build", "latest");
+      properties.setProperty("autoupdate", "no");
+      properties.setProperty("javaArgs", "-server -Xmx4G -XX:+DisableExplicitGC "
+          + "-XX:+AggressiveOpts");
 
-            try {
-                properties.store(new FileOutputStream("modpack.properties"), null);
-            } catch (IOException e) {
-                Logging.logErr("Failed read and writing config. caused by: ");
-                e.printStackTrace();
-                Logging.logErr("Make sure modpack.properties is readable and writeable and restart! EXITING!");
-                System.exit(1);
-            }
-        }
-
-            // load a properties file
-
-            url = properties.getProperty("url");
-            build = properties.getProperty("build");
-            switch (properties.getProperty("autoupdate")) {
-                case "true":
-                case "True":
-                case "yes":
-                case "Yes":
-                case "1":
-                    autoupdate = true;
-                    break;
-                default:
-                    autoupdate = false;
-
-            }
-            switch (properties.getProperty("disableAnalytics", "false")) {
-                case "true":
-                case "True":
-                case "yes":
-                case "Yes":
-                case "1":
-                    disableAnalytics = true;
-                    break;
-                default:
-                    disableAnalytics = false;
-
-            }
-            javaArgs = Arrays.asList(properties.getProperty("javaArgs", "").split(" "));
+      try {
+        properties.store(new FileOutputStream("modpack.properties"), null);
+      } catch (IOException e) {
+        Logging.logErr("Failed read and writing config. caused by: ");
+        e.printStackTrace();
+        Logging.logErr("Make sure modpack.properties is readable and writeable and "
+            + "restart! EXITING!");
+        System.exit(1);
+      }
     }
 
-    /**
-     * autoupdate property getter
-     * @return autoupdate
-     */
-    public static boolean isAutoupdate() {
-        return instance.autoupdate;
-    }
+    // load a properties file.
 
-    /**
-     * build property getter
-     * @return build
-     */
-    public static String getBuild() {
-        return instance.build;
-    }
+    url = properties.getProperty("url");
+    build = properties.getProperty("build");
+    switch (properties.getProperty("autoupdate")) {
+      case "true":
+      case "True":
+      case "yes":
+      case "Yes":
+      case "1":
+        autoupdate = true;
+        break;
+      default:
+        autoupdate = false;
 
-    /**
-     * url property getter
-     * @return url
-     */
-    public static String getUrl() {
-        return instance.url;
     }
+    switch (properties.getProperty("disableAnalytics", "false")) {
+      case "true":
+      case "True":
+      case "yes":
+      case "Yes":
+      case "1":
+        disableAnalytics = true;
+        break;
+      default:
+        disableAnalytics = false;
 
-    /**
-     * javaArgs property getter
-     * @return javaArgs
-     */
-    public static List<String> getJavaArgs() {
-        return instance.javaArgs;
     }
+    javaArgs = Arrays.asList(properties.getProperty("javaArgs", "").split(" "));
+  }
 
-    /**
-     * disableAnalytics property getter
-     * @return disableAnalytics
-     */
-    public static boolean isDisableAnalytics() {
-        return instance.disableAnalytics;
-    }
+  /**
+   * autoupdate property getter.
+   * @return autoupdate
+   */
+  public static boolean isAutoupdate() {
+    return instance.autoupdate;
+  }
 
-    /**
-     * Reread UserConfig
-     */
-    public static void reload() {
-        instance = new UserConfig();
-    }
+  /**
+   * build property getter.
+   * @return build
+   */
+  public static String getBuild() {
+    return instance.build;
+  }
+
+  /**
+   * url property getter.
+   * @return url
+   */
+  public static String getUrl() {
+    return instance.url;
+  }
+
+  /**
+   * javaArgs property getter.
+   * @return javaArgs
+   */
+  public static List<String> getJavaArgs() {
+    return instance.javaArgs;
+  }
+
+  /**
+   * disableAnalytics property getter.
+   * @return disableAnalytics
+   */
+  public static boolean isDisableAnalytics() {
+    return instance.disableAnalytics;
+  }
+
+  /**
+   * Reread UserConfig.
+   */
+  public static void reload() {
+    instance = new UserConfig();
+  }
 }
