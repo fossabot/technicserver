@@ -32,6 +32,11 @@ import java.util.regex.Pattern;
  * Represent the Minecraft Version in very fancy manner.
  */
 public class MinecraftVerion implements Serializable {
+
+  /**
+   * Serialization UID
+   */
+  public static final long serialVersionUID = 201709051908L;
   /**
    * Major Version part. E.g. 7 if MC Version is 1.7.X
    */
@@ -41,15 +46,15 @@ public class MinecraftVerion implements Serializable {
    */
   private int minor;
 
-  public static final long serialVersionUID = 201709051908L;
-
   /**
    * Setup this very fancy class.
    * @param versionString original version string such as "1.7.10"
    */
   public MinecraftVerion(String versionString) {
     String[] ver = versionString.split(Pattern.quote("."));
-    if (ver.length > 3 || ver.length < 2) {
+    int versionMaxLength = 3;
+    int versionMinLength = 2;
+    if (ver.length > versionMaxLength || ver.length < versionMinLength) {
       throw new MalformedParametersException("Invalid Minecraft Version String");
     }
     major = Integer.parseInt(ver[1]);

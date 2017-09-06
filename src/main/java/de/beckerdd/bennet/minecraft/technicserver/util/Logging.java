@@ -152,6 +152,9 @@ public final class Logging {
     instance.stdOut.println(s);
   }
 
+  /**
+   * Logging Tag
+   */
   private enum  LoggingTag {
     OUT,
     ERR,

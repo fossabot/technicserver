@@ -35,6 +35,10 @@ import javax.json.JsonObject;
  */
 public class Resource implements Serializable {
   /**
+   * Serialization UID.
+   */
+  public static final long serialVersionUID = 201709051908L;
+  /**
    * File URL.
    */
   private URL url;
@@ -42,8 +46,6 @@ public class Resource implements Serializable {
    * File Checksum.
    */
   private String md5;
-
-  public static final long serialVersionUID = 201709051908L;
 
   /**
    * Parse the JSON Object to initializie the Resource.

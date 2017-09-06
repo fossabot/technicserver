@@ -263,8 +263,9 @@ public class TechnicApi {
           + "START WITH \"update\" AS PARAMETER OR SET AUTOUPDATE TO \"yes\""
           + AnsiColor.ANSI_RESET);
 
-      Logging.logDebug("sleeping 5 sec.");
-      Thread.sleep(5000);
+      Logging.logDebug("sleeping " + StaticConfig.UPDATE_MESSAGE_SLEEP_MILLISECONDS
+          + " msec.");
+      Thread.sleep(StaticConfig.UPDATE_MESSAGE_SLEEP_MILLISECONDS);
     }
   }
 }

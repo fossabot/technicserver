@@ -41,6 +41,10 @@ import javax.json.JsonValue;
 @SuppressWarnings("CanBeFinal")
 public class Solder implements Serializable {
   /**
+   * Serialization UID.
+   */
+  public static final long serialVersionUID = 201709051908L;
+  /**
    * URL of the Solder installtion.
    */
   private String url;
@@ -49,8 +53,6 @@ public class Solder implements Serializable {
    * Mirror URL for files.
    */
   private String mirrorUrl;
-
-  public static final long serialVersionUID = 201709051908L;
 
   /**
    * Init Solder.

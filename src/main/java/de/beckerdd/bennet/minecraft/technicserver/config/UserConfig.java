@@ -92,29 +92,23 @@ public final class UserConfig {
 
     url = properties.getProperty("url");
     build = properties.getProperty("build");
-    switch (properties.getProperty("autoupdate")) {
+    switch (properties.getProperty("autoupdate", "").toLowerCase()) {
       case "true":
-      case "True":
       case "yes":
-      case "Yes":
       case "1":
         autoupdate = true;
         break;
       default:
         autoupdate = false;
-
     }
-    switch (properties.getProperty("disableAnalytics", "false")) {
+    switch (properties.getProperty("disableAnalytics", "false").toLowerCase()) {
       case "true":
-      case "True":
       case "yes":
-      case "Yes":
       case "1":
         disableAnalytics = true;
         break;
       default:
         disableAnalytics = false;
-
     }
     javaArgs = Arrays.asList(properties.getProperty("javaArgs", "").split(" "));
   }

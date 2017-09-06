@@ -49,6 +49,10 @@ import org.apache.commons.io.FileUtils;
  */
 @SuppressWarnings("UnusedReturnValue")
 public class Modpack implements Serializable {
+  /**
+   * Serialization UID.
+   */
+  public static final long serialVersionUID = 201709062240L;
   //region private Fields - API
   /**
    * Modpack ID.
@@ -111,11 +115,6 @@ public class Modpack implements Serializable {
    * Current installed Version.
    */
   private String buildInstalled;
-
-  /**
-   * Serialization UID.
-   */
-  public static final long serialVersionUID = 201709051908L;
 
   /**
    * Parse Modpack from JSON Stream.

@@ -38,6 +38,10 @@ import javax.json.JsonValue;
  */
 public final class ForgeInstaller {
   /**
+   * Prevent initialization.
+   */
+  private ForgeInstaller() { }
+  /**
    * Install Forge Modloader.
    * @param inputStream InputSteam to contained version.json
    * @throws IOException Download failed!
@@ -104,9 +108,4 @@ public final class ForgeInstaller {
       throw new IOException("ForgeInstaller Failed");
     }
   }
-
-  /**
-   * Prevent initialization.
-   */
-  private ForgeInstaller() { }
 }

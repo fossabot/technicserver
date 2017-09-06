@@ -46,6 +46,8 @@ public final class StaticConfig {
    */
   public static final String MINECRAFT_JAR_PATTERN = "https://s3.amazonaws.com/Minecraft.Download/versions/{MCVER}/minecraft_server.{MCVER}.jar";
 
+  public static final int UPDATE_MESSAGE_SLEEP_MILLISECONDS = 5000;
+
   /**
    * Prevent initialization.
    */

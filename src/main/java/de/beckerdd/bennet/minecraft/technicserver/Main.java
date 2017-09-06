@@ -69,7 +69,7 @@ public final class Main {
     technicApi.saveState();
 
     technicApi.runAnalytics(Double.toString(
-        (startTime.getTime() - (new Date()).getTime()) / 1000
+        (startTime.getTime() - (new Date()).getTime())
     ));
 
 
