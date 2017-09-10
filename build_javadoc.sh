@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/bash -e
 
-test TRAVIS_PULL_REQUEST = true && exit 0
+test ${TRAVIS_PULL_REQUEST} = true && exit 0
 
 JAVA_FILES=$(find ./src/ -type f -iname *.java -print0 | tr '\0' ' ')
 CLASSES=$(find $HOME/.gradle/caches/ -type f -iname *.jar -print0 | tr '\0' ';')
@@ -15,6 +15,10 @@ javadoc -locale en_US -private -splitindex -use -author -version ${JAVA_FILES} \
 	
 pushd .
 cd ../technicserver-gh-pages
+test x"${TRAVIS_BRANCH}" = x"${TRAVIS_TAG}" && \
+  sed -i "s|^(?<=## Versions)$|\n * [${TRAVIS_TAG}](${TRAVIS_TAG}/index.html)" docs/javadoc/index.md || \
+  (grep -q "${TRAVIS_BRANCH}" docs/javadoc/index.md || \
+    sed -i "s|^(?<=## Branches)$|\n * [${TRAVIS_BRANCH}](${TRAVIS_BRANCH}/index.html)" docs/javadoc/index.md)
 pwd
 git status
 git add docs/javadoc
