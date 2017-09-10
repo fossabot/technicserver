@@ -3,11 +3,12 @@ package de.beckerdd.bennet.minecraft.technicserver.technic;
 import de.beckerdd.bennet.minecraft.technicserver.util.Downloader;
 import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 
-import javax.json.JsonObject;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import javax.json.JsonObject;
 
 /*
  * Created by bennet on 8/7/17.
@@ -30,54 +31,58 @@ import java.net.URL;
  */
 
 /**
- * Represents a Resource File
+ * Represents a Resource File.
  */
 public class Resource implements Serializable {
-    /**
-     * File URL
-     */
-    private URL url;
-    /**
-     * File Checksum
-     */
-    private String md5;
+  /**
+   * Serialization UID.
+   */
+  public static final long serialVersionUID = 201709051908L;
+  /**
+   * File URL.
+   */
+  private URL url;
+  /**
+   * File Checksum.
+   */
+  private String md5;
 
-    /**
-     * Parse the JSON Object to initializie the Resource
-     * @param jsonObject JsonObject to parse
-     */
-    public Resource(JsonObject jsonObject) {
-        try {
-            url = new URL(jsonObject.getString("url"));
-            md5 = jsonObject.getString("md5");
-        } catch (MalformedURLException e) {
-            Logging.logErr("Failed Creating Resource");
-            Logging.logErr(e.getLocalizedMessage());
-        }
+  /**
+   * Parse the JSON Object to initializie the Resource.
+   * @param jsonObject JsonObject to parse
+   */
+  public Resource(JsonObject jsonObject) {
+    try {
+      url = new URL(jsonObject.getString("url"));
+      md5 = jsonObject.getString("md5");
+    } catch (MalformedURLException e) {
+      Logging.logErr("Failed Creating Resource");
+      Logging.logErr(e.getLocalizedMessage());
     }
+  }
 
-    /**
-     * Try to Download the Resource
-     * @param path Destination Path
-     * @throws IOException Download Failed
-     */
-    public void download(String path) throws IOException {
-        Downloader.downloadFile(url, path);
-    }
+  /**
+   * Try to Download the Resource.
+   * @param path Destination Path
+   * @throws IOException Download Failed
+   */
+  public void download(String path) throws IOException {
+    Downloader.downloadFile(url, path);
+  }
 
-    /**
-     * url getter
-     * @return url
-     */
-    public URL getUrl() {
-        return url;
-    }
+  /**
+   * url getter.
+   * @return url
+   */
+  public URL getUrl() {
+    return url;
+  }
 
-    /**
-     * md5 getter
-     * @return md5
-     */
-    public String getMd5() {
-        return md5;
-    }
+  /**
+   * md5 getter.
+   * @return md5
+   */
+  public String getMd5() {
+    return md5;
+  }
 }

@@ -24,34 +24,35 @@ import java.io.PrintStream;
  */
 
 /**
- * Logging Stream for Hijacking STDOUT and STDERR
+ * Logging Stream for Hijacking STDOUT and STDERR.
  */
+@SuppressWarnings("CanBeFinal")
 public class LoggingStream extends PrintStream {
 
-    /**
-     * is the a Error Stream?
-     */
-    private boolean isErr;
+  /**
+   * is the a Error Stream?.
+   */
+  private boolean isErr;
 
-    /**
-     * Setup the Stream
-     * @param out Stream
-     * @param isErr Error?
-     */
-    public LoggingStream(OutputStream out, boolean isErr) {
-        super(out);
-        this.isErr = isErr;
-    }
+  /**
+   * Setup the Stream.
+   * @param out Stream
+   * @param isErr Error?
+   */
+  public LoggingStream(OutputStream out, boolean isErr) {
+    super(out);
+    this.isErr = isErr;
+  }
 
-    /**
-     * Redirect println to Logging Singelton
-     * @param line Line to Print
-     */
-    @Override public void println(String line) {
-        if (isErr) {
-            Logging.logErr(line);
-        } else {
-            Logging.log(line);
-        }
+  /**
+   * Redirect println to Logging Singelton.
+   * @param line Line to Print
+   */
+  @Override public void println(String line) {
+    if (isErr) {
+      Logging.logErr(line);
+    } else {
+      Logging.log(line);
     }
+  }
 }

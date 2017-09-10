@@ -1,11 +1,16 @@
 package de.beckerdd.bennet.minecraft.technicserver.util;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.FileUtils;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 
 /*
  * Created by bennet on 8/7/17.
@@ -28,131 +33,105 @@ import java.net.URL;
  */
 
 /**
- * Static Class for handling Downloads
+ * Static Class for handling Downloads.
  */
 public final class Downloader {
 
-    private final static int DOWNLOAD_BUFFER_SIZE = 1024;
+  private static final int DOWNLOAD_BUFFER_SIZE = 1024;
 
-    /**
-     * Prevent initialization
-     */
-    private Downloader() {}
+  /**
+   * Prevent initialization.
+   */
+  private Downloader() { }
 
-    /**
-     * Download a File
-     * @param url URL to the File
-     * @param path Destination Path
-     * @throws IOException throws if file not downloadable or destination not writeable
-     */
-    public static void downloadFile(URL url, String path) throws IOException {
-        FileUtils.forceMkdirParent(new File(path));
+  /**
+   * Download a File.
+   * @param url URL to the File
+   * @param path Destination Path
+   * @throws IOException throws if file not downloadable or destination not writeable
+   */
+  public static void downloadFile(URL url, String path) throws IOException {
+    FileUtils.forceMkdirParent(new File(path));
 
-        HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
-        //long completeFileSize = httpConnection.getContentLength();
+    HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
+    //long completeFileSize = httpConnection.getContentLength();
 
-        BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
-        FileOutputStream fos = new FileOutputStream(path);
-        BufferedOutputStream bout = new BufferedOutputStream(fos, DOWNLOAD_BUFFER_SIZE);
-        byte[] data = new byte[DOWNLOAD_BUFFER_SIZE];
-        //long downloadedFileSize = 0;
+    BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
+    FileOutputStream fos = new FileOutputStream(path);
+    BufferedOutputStream bout = new BufferedOutputStream(fos, DOWNLOAD_BUFFER_SIZE);
+    byte[] data = new byte[DOWNLOAD_BUFFER_SIZE];
+    //long downloadedFileSize = 0;
 
-        int x;
-        Logging.log("starting package download from " + url);
-        while ((x = in.read(data, 0, DOWNLOAD_BUFFER_SIZE)) >= 0) {
-            //downloadedFileSize += x;
+    int x;
+    Logging.log("starting package download from " + url);
+    while ((x = in.read(data, 0, DOWNLOAD_BUFFER_SIZE)) >= 0) {
+      bout.write(data, 0, x);
+    }
+    bout.close();
+    in.close();
+    //System.out.println();
+  }
 
-            /*// calculate progress
-            int currentProgress = (int) ((((double)downloadedFileSize) / ((double)completeFileSize)) * 100.0);
+  /**
+   * Download a File.
+   * @param url URL to the File
+   * @param path Destination Path
+   * @throws IOException throws if file not downloadable or destination not writeable
+   * @throws java.net.MalformedURLException URL was malformed
+   */
+  public static void downloadFile(String url, String path) throws IOException {
+    downloadFile(new URL(url), path);
+  }
 
-            // update progress bar
-            System.out.print("Downloading '" + path + "': [");
-            for(int i = 0; i < currentProgress/10; i++) {
-                System.out.print("#");
-            }
-            for(int i = 0; i < 10-currentProgress/10; i++) {
-                System.out.print(" ");
-            }
-            System.out.print("] " + currentProgress + "%\r");*/
+  /**
+   * Download a File and check it's MD5 sum.
+   * @param url URL to the File
+   * @param path Destination
+   * @param md5 expected MD5
+   * @throws IOException throws if file not downloadable or destination not writeable
+   * @throws DownloadException Md5 Missmatches
+   */
+  public static void downloadFile(URL url, String path, String md5) throws IOException {
+    downloadFile(url, path);
+    FileInputStream fis = new FileInputStream(new File(path));
 
-            bout.write(data, 0, x);
-        }
-        bout.close();
-        in.close();
-        //System.out.println();
+    if (!DigestUtils.md5Hex(fis).equalsIgnoreCase(md5)) {
+      throw new DownloadException("MD5 sum missmatch");
+    }
+  }
+
+  /**
+   * Download a File and check it's MD5 sum.
+   * @param url URL to the File
+   * @param path Destination
+   * @param md5 expected MD5
+   * @throws IOException throws if file not downloadable or destination not writeable
+   * @throws java.net.MalformedURLException URL was malformed
+   * @throws DownloadException Md5 Missmatches
+   */
+  public static void downloadFile(String url, String path, String md5) throws IOException {
+    downloadFile(new URL(url), path, md5);
+  }
+
+  /**
+   * Download Failure.
+   */
+  public static class DownloadException extends IOException {
+
+    public DownloadException() {
+      super();
     }
 
-    /**
-     * Download a File
-     * @param url URL to the File
-     * @param path Destination Path
-     * @throws IOException throws if file not downloadable or destination not writeable
-     * @throws java.net.MalformedURLException URL was malformed
-     */
-    public static void downloadFile(String url, String path) throws IOException {
-        downloadFile(new URL(url), path);
+    public DownloadException(String message) {
+      super(message);
     }
 
-    /**
-     * Download a File and check it's MD5 sum
-     * @param url URL to the File
-     * @param path Destination
-     * @param md5 expected MD5
-     * @throws IOException throws if file not downloadable or destination not writeable
-     * @throws DownloadException Md5 Missmatches
-     */
-    public static void downloadFile(URL url, String path, String md5) throws IOException {
-        downloadFile(url, path);
-        FileInputStream fis = new FileInputStream(new File(path));
-
-        if (!DigestUtils.md5Hex(fis).equalsIgnoreCase(md5)) {
-            throw new DownloadException("MD5 sum missmatch");
-        }
+    public DownloadException(String message, Throwable cause) {
+      super(message, cause);
     }
 
-    /**
-     * Download a File and check it's MD5 sum
-     * @param url URL to the File
-     * @param path Destination
-     * @param md5 expected MD5
-     * @throws IOException throws if file not downloadable or destination not writeable
-     * @throws java.net.MalformedURLException URL was malformed
-     * @throws DownloadException Md5 Missmatches
-     */
-    public static void downloadFile(String url, String path, String md5) throws IOException {
-        downloadFile(new URL(url), path, md5);
+    public DownloadException(Throwable cause) {
+      super(cause);
     }
-
-    /**
-     * Download Failure
-     */
-    public static class DownloadException extends IOException {
-        /**
-         * {@inheritDoc}
-         */
-        public DownloadException() {
-            super();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public DownloadException(String message) {
-            super(message);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public DownloadException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public DownloadException(Throwable cause) {
-            super(cause);
-        }
-    }
+  }
 }

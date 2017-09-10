@@ -28,130 +28,136 @@ import java.util.Date;
  */
 
 /**
- * Singelton for Logging Purposes
+ * Singelton for Logging Purposes.
  */
 public final class Logging {
-    /**
-     * Singelton Instance
-     */
-    private static Logging instance = new Logging();
+  /**
+   * Singelton Instance.
+   */
+  private static Logging instance = new Logging();
+  /**
+   * Parent Class Index in Stacktrace.
+   */
+  private static final int CALLING_CLASS_ORDER_IN_STACKTRACE = 2;
 
-    /**
-     * the Logfile
-     */
-    private PrintWriter fileWriter;
-    /**
-     * Original Std Out form System.out - will be hijacked in CTOR
-     */
-    private PrintStream stdOut = System.out;
-    /**
-     * Original Std Err form System.err - will be hijacked in CTOR
-     */
-    private PrintStream stdErr = System.err;
+  /**
+   * the Logfile.
+   */
+  private PrintWriter fileWriter;
+  /**
+   * Original Std Out form System.out - will be hijacked in CTOR
+   */
+  private final PrintStream stdOut = System.out;
+  /**
+   * Original Std Err form System.err - will be hijacked in CTOR
+   */
+  private final PrintStream stdErr = System.err;
 
-    private static int CALLING_CLASS_ORDER_IN_STACKTRACE = 2;
+  //private final String timezone = TimeZone.getDefault().getID();
 
-    //private final String timezone = TimeZone.getDefault().getID();
+  /**
+   * Private Singelton Constructor, setting up Logging.
+   */
+  private Logging() {
+    String timestamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
 
-    /**
-     * Private Singelton Constructor, setting up Logging
-     */
-    private Logging() {
-        String timestamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
+    File f = new File("logs/");
 
-        File f = new File("logs/");
-
-        if (!f.exists() || !f.isDirectory()) {
-            f.mkdir();
-        }
-        String filename = "logs/technicserver-" + timestamp + ".log";
-        try {
-            fileWriter = new PrintWriter(filename, "UTF-8");
-        } catch (IOException e) {
-            System.err.println(e.getLocalizedMessage());
-            e.printStackTrace();
-            System.exit(1);
-        }
-        //Hijack STDOUT and STDERR :)
-        System.setOut(new LoggingStream(stdOut, false));
-        System.setErr(new LoggingStream(stdOut, true));
+    if (!f.exists() || !f.isDirectory()) {
+      f.mkdir();
     }
-
-    /**
-     * Log a Message to STDOUT
-     * @param logString Log Message
-     */
-    public static void log(String logString) {
-        String caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE].getClassName();
-        if (caller.equals(LoggingStream.class.getName())) {
-            caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE + 1].getClassName();
-        }
-        String logme = String.format("[%s] [OUT] [#%03d] [%s] %s",
-                new Date(),
-                Thread.currentThread().getId(),
-                caller.substring(caller.lastIndexOf(".") + 1),  logString);
-        instance.stdOut.println(logme);
-        instance.fileWriter.println(logme);
+    String filename = "logs/technicserver-" + timestamp + ".log";
+    try {
+      fileWriter = new PrintWriter(filename, "UTF-8");
+    } catch (IOException e) {
+      System.err.println(e.getLocalizedMessage());
+      e.printStackTrace();
+      System.exit(1);
     }
+    //Hijack STDOUT and STDERR :)
+    System.setOut(new LoggingStream(stdOut, false));
+    System.setErr(new LoggingStream(stdOut, true));
+  }
 
-    /**
-     * Log a Message to STDERR
-     * @param logString Log Message
-     */
-    public static void logErr(String logString) {
-        String caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE].getClassName();
-        if (caller.equals(LoggingStream.class.getName())) {
-            caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE + 1].getClassName();
-        }
-        String logme = String.format("[%s] [ERR] [#%03d] [%s] %s",
-                new Date(),
-                Thread.currentThread().getId(),
-                caller.substring(caller.lastIndexOf(".") + 1),  logString);
-        instance.stdErr.println(logme);
-        instance.fileWriter.println(logme);
+  private static void log(String logString, LoggingTag tag) {
+    String caller = Thread.currentThread().getStackTrace()
+        [CALLING_CLASS_ORDER_IN_STACKTRACE].getClassName();
+    if (caller.equals(LoggingStream.class.getName())) {
+      caller = Thread.currentThread().getStackTrace()
+          [CALLING_CLASS_ORDER_IN_STACKTRACE + 1].getClassName();
     }
+    String logme = String.format("[%s] [%s] [#%03d] [%s] %s",
+        new Date(),
+        tag.name(),
+        Thread.currentThread().getId(),
+        caller.substring(caller.lastIndexOf(".") + 1),  logString);
 
-    /**
-     * Log a Debug Message
-     * @param logString Log Message
-     */
-    public static void logDebug(String logString) {
-        String caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE].getClassName();
-        if (caller.equals(LoggingStream.class.getName())) {
-            caller = Thread.currentThread().getStackTrace()[CALLING_CLASS_ORDER_IN_STACKTRACE + 1].getClassName();
-        }
-        String logme = String.format("[%s] [DBG] [#%03d] [%s] %s",
-                new Date(),
-                Thread.currentThread().getId(),
-                caller.substring(caller.lastIndexOf(".") + 1),  logString);
-        if (System.getProperty("DEBUG") != null) {
-            instance.stdOut.println(logme);
-            instance.fileWriter.println(logme);
-        }
+    if (tag == LoggingTag.ERR) {
+      instance.stdErr.println(logme);
     }
+    if (tag == LoggingTag.OUT || tag == LoggingTag.DBG) {
+      instance.stdOut.println(logme);
+    }
+    instance.fileWriter.println(logme);
+  }
 
-    /**
-     * Kill the Logging Singelton -  can't undone
-     */
-    public static void kill() {
-        System.setOut(instance.stdOut);
-        System.setErr(instance.stdErr);
-        instance = null;
-    }
+  /**
+   * Log a Message to STDOUT.
+   * @param logString Log Message
+   */
+  public static void log(String logString) {
+    log(logString, LoggingTag.OUT);
+  }
 
-    /**
-     * Print a plain Message with out "decoration"
-     * @param s String to print
-     */
-    public static void plainPrint(String s) {
-        instance.stdOut.print(s);
-    }
+  /**
+   * Log a Message to STDERR.
+   * @param logString Log Message
+   */
+  public static void logErr(String logString) {
+    log(logString, LoggingTag.ERR);
+  }
 
-    /**
-     * Print a plain Message with out "decoration" and a newline
-     * @param s String to print
-     */
-    public static void plainPrintln(String s) {
-        instance.stdOut.println(s);
+  /**
+   * Log a Debug Message.
+   * @param logString Log Message
+   */
+  public static void logDebug(String logString) {
+    if (System.getProperty("DEBUG") != null) {
+      log(logString, LoggingTag.DBG);
     }
+  }
+
+  /**
+   * Kill the Logging Singelton -  can't undone.
+   */
+  public static void kill() {
+    System.setOut(instance.stdOut);
+    System.setErr(instance.stdErr);
+    instance = null;
+  }
+
+  /**
+   * Print a plain Message with out "decoration".
+   * @param s String to print
+   */
+  public static void plainPrint(String s) {
+    instance.stdOut.print(s);
+  }
+
+  /**
+   * Print a plain Message with out "decoration" and a newline.
+   * @param s String to print
+   */
+  public static void plainPrintln(String s) {
+    instance.stdOut.println(s);
+  }
+
+  /**
+   * Logging Tag.
+   */
+  private enum  LoggingTag {
+    OUT,
+    ERR,
+    DBG
+  }
 }

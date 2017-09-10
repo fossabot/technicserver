@@ -4,21 +4,25 @@ import de.beckerdd.bennet.minecraft.technicserver.config.UserConfig;
 import de.beckerdd.bennet.minecraft.technicserver.util.Downloader;
 import de.beckerdd.bennet.minecraft.technicserver.util.Extractor;
 import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
-import org.apache.commons.io.FileUtils;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+
+import org.apache.commons.io.FileUtils;
+
 
 /*
  * Created by bennet on 8/10/17.
@@ -41,373 +45,414 @@ import java.util.stream.Collectors;
  */
 
 /**
- * Class representing the Modpack inside the API
+ * Class representing the Modpack inside the API.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class Modpack implements Serializable {
-    //region private Fields - API
-    private int id;
-    private String name;
-    private String displayName;
-    private String user;
-    private URL url;
-    private String platformUrl;
-    private MinecraftVerion minecraft;
-    private int ratings;
-    private int downloads;
-    private int runs;
-    private String description;
-    private HashSet<String> tags;
-    private boolean isServer;
-    private boolean isOfficial;
-    private String version;
-    private boolean forceDir;
-    //private List<Feed> feed;
-    private Resource icon;
-    private Resource logo;
-    private Resource background;
-    private Solder solder;
-    private Discord discordServerId;
-    //endregion
+  /**
+   * Serialization UID.
+   */
+  public static final long serialVersionUID = 201709062240L;
+  //region private Fields - API
+  /**
+   * Modpack ID.
+   */
+  private int id;
+  /**
+   * friendly name for Modpack.
+   */
+  private String name;
+  /**
+   * Modpacks Display Name.
+   */
+  private String displayName;
+  /**
+   * Username of the Modpack Creator.
+   */
+  private String user;
+  /**
+   * Download URL.
+   */
+  private URL url;
+  /**
+   * Minecraft Version.
+   */
+  private MinecraftVerion minecraft;
+  /**
+   * Modpack Version.
+   */
+  private String version;
+  /**
+   * Icon Resource.
+   */
+  private Resource icon;
+  /**
+   * Logo Resource.
+   */
+  private Resource logo;
+  /**
+   * Solder.
+   */
+  private Solder solder;
+  //endregion
 
-    //region private Field - Pack
-    private HashSet<Mod> mods;
-    private HashMap<String, HashSet<String>> modFiles;
-    //endregion
+  //region private Field - Pack
+  /**
+   * Contained Mods.
+   */
+  private Set<Mod> mods;
+  /**
+   * Files from Mod ZIP-Files.
+   */
+  private Map<String, Set<String>> modFiles;
+  //endregion
 
-    private State state;
-    private String buildInstalled;
+  /**
+   * Current Installationstate.
+   */
+  private State state;
+  /**
+   * Current installed Version.
+   */
+  private String buildInstalled;
 
-    /**
-     * Parse Modpack from JSON Stream
-     * @param jsonStream API JSON to Parse
-     * @throws IOException Parsing Failed
-     */
-    public Modpack(InputStream jsonStream) throws IOException {
-        state = State.NOT_INSTALLED;
-        Logging.log("Initializing Modpack from JSON InputStream");
-        JsonReader rdr = Json.createReader(jsonStream);
-        JsonObject obj = rdr.readObject();
+  /**
+   * Parse Modpack from JSON Stream.
+   * @param jsonStream API JSON to Parse
+   * @throws IOException Parsing Failed
+   */
+  public Modpack(InputStream jsonStream) throws IOException {
+    state = State.NOT_INSTALLED;
+    Logging.log("Initializing Modpack from JSON InputStream");
+    JsonReader rdr = Json.createReader(jsonStream);
+    JsonObject obj = rdr.readObject();
 
-        initSome(obj);
-        if (obj.getString("solder", "").equals("")) {
-            solder = null;
-            mods = null;
-            Logging.logDebug("Modpack isn't using Solder API");
-        } else {
-            solder = new Solder(obj.getString("solder"));
-            mods = new HashSet<>();
-            Logging.logDebug("Modpack is using Solder API @ " + solder);
-            solder.initMods(this);
-        }
-        modFiles = new HashMap<>();
+    initSome(obj);
+    if (obj.getString("solder", "").equals("")) {
+      //solder = null;
+      //mods = null;
+      Logging.logDebug("Modpack isn't using Solder API");
+    } else {
+      solder = new Solder(obj.getString("solder"));
+      mods = new HashSet<>();
+      Logging.logDebug("Modpack is using Solder API @ " + solder);
+      solder.initMods(this);
+    }
+    modFiles = new HashMap<>();
 
-        Logging.log("Identified Modpack '" + displayName + "' (" + name + ") by " + user);
+    Logging.log("Identified Modpack '" + displayName + "' (" + name + ") by " + user);
+  }
+
+  /**
+   * Initializies internal fields. called by {@link #Modpack(InputStream)}
+   * @param obj JSON object to parse from.
+   * @throws MalformedURLException URLs inside JSON are Malformed
+   */
+  private void initSome(JsonObject obj) throws MalformedURLException {
+    Logging.log("Initializing Modpack from JSON Object");
+
+    id = obj.getInt("id");
+    name = obj.getString("name");
+    displayName = obj.getString("displayName");
+    user = obj.getString("user");
+
+    if (!obj.getString("url", "").equals("")) {
+      url = new URL(obj.getString("url"));
     }
 
-    /**
-     * Initializies internal fields. called by {@link #Modpack(InputStream)}
-     * @param obj JSON object to parse from.
-     * @throws MalformedURLException URLs inside JSON are Malformed
-     */
-    private void initSome(JsonObject obj) throws MalformedURLException {
-        Logging.log("Initializing Modpack from JSON Object");
+    minecraft = new MinecraftVerion(obj.getString("minecraft"));
+    version = obj.getString("version");
+    icon = new Resource(obj.getJsonObject("icon"));
+    logo = new Resource(obj.getJsonObject("logo"));
+  }
 
-        id = obj.getInt("id");
-        name = obj.getString("name");
-        displayName = obj.getString("displayName");
-        user = obj.getString("user");
-        if (obj.getString("url", "").equals("")) {
-            url = null;
-        } else {
-            url = new URL(obj.getString("url"));
-        }
-        platformUrl = obj.getString("platformUrl");
-        minecraft = new MinecraftVerion(obj.getString("minecraft"));
-        ratings = obj.getInt("ratings");
-        downloads = Integer.parseInt(obj.getString("downloads"));
-        runs = Integer.parseInt(obj.getString("runs"));
-        description = obj.getString("description");
-        tags = new HashSet<>();
-        tags.addAll(Arrays.asList(obj.getString("tags").split(",")));
-        isServer = obj.getBoolean("isServer");
-        isOfficial = obj.getBoolean("isOfficial");
-        version = obj.getString("version");
-        forceDir = obj.getBoolean("forceDir");
-        //feed = null; //TODO
-        icon = new Resource(obj.getJsonObject("icon"));
-        logo = new Resource(obj.getJsonObject("logo"));
-        background = new Resource(obj.getJsonObject("background"));
-        if (obj.getString("discordServerId", "").equals("")) {
-            discordServerId = null;
-        } else {
-            discordServerId = new Discord(obj.getString("discordServerId"));
-        }
-    }
+  //region Getters
 
-    //region Getters
-    public String getName() {
-        return name;
-    }
+  /**
+   * name getter.
+   * @return name
+   */
+  public String getName() {
+    return name;
+  }
 
-    public MinecraftVerion getMinecraft() {
-        return minecraft;
-    }
+  /**
+   * minecraft getter.
+   * @return minecraft
+   */
+  public MinecraftVerion getMinecraft() {
+    return minecraft;
+  }
 
-    public Resource getIcon() {
-        return icon;
-    }
+  /**
+   * icon getter.
+   * @return icon
+   */
+  public Resource getIcon() {
+    return icon;
+  }
 
-    public int getId() {
-        return id;
-    }
+  /**
+   * id getter.
+   * @return id
+   */
+  public int getId() {
+    return id;
+  }
 
-    public String getDisplayName() {
-        return displayName;
-    }
+  /**
+   * display_name getter.
+   * @return display_name
+   */
+  public String getDisplayName() {
+    return displayName;
+  }
 
-    public String getUser() {
-        return user;
-    }
+  /**
+   * user getter.
+   * @return user
+   */
+  public String getUser() {
+    return user;
+  }
 
-    public URL getUrl() {
-        return url;
-    }
+  /**
+   * url getter.
+   * @return url
+   */
+  public URL getUrl() {
+    return url;
+  }
 
-    public String getPlatformUrl() {
-        return platformUrl;
-    }
+  /**
+   * version getter.
+   * @return version
+   */
+  public String getVersion() {
+    return version;
+  }
 
-    public int getRatings() {
-        return ratings;
-    }
+  /**
+   * modfiles getter.
+   * @return modfiles
+   */
+  public Map<String, Set<String>> getModFiles() {
+    return modFiles;
+  }
 
-    public int getDownloads() {
-        return downloads;
-    }
+  /**
+   * state getter.
+   * @return state
+   */
+  public State getState() {
+    return state;
+  }
 
-    public int getRuns() {
-        return runs;
-    }
+  /**
+   * buildInstalled getter.
+   * @return buildInstalled
+   */
+  public String getBuildInstalled() {
+    return buildInstalled;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  /**
+   * logo getter.
+   * @return logo
+   */
+  public Resource getLogo() {
+    return logo;
+  }
 
-    public HashSet<String> getTags() {
-        return tags;
-    }
+  /**
+   * solder getter.
+   * @return solder
+   */
+  public Solder getSolder() {
+    return solder;
+  }
 
-    public boolean isServer() {
-        return isServer;
-    }
+  /**
+   * mods getter.
+   * @return mods
+   */
+  public Set<Mod> getMods() {
+    return mods;
+  }
 
-    public boolean isOfficial() {
-        return isOfficial;
-    }
+  //endregion
 
-    public String getVersion() {
-        return version;
-    }
+  /**
+   * override the minecraft version.
+   * @param minecraft Minecraft Version-String
+   */
+  public void overrideMinecraft(String minecraft) {
+    this.minecraft = new MinecraftVerion(minecraft);
+  }
 
-    public boolean isForceDir() {
-        return forceDir;
-    }
+  /**
+   * Add a mod to the internal List.
+   * @param mod Mod to add
+   * @return this #SyntacticSugar
+   */
+  public Modpack addMod(Mod mod) {
+    mods.add(mod);
+    return this;
+  }
 
-    /*public List<Feed> getFeed() {
-        return feed;
-    }*/
+  /**
+   * Download all Modpack files (Mods).
+   * @return this
+   * @throws IOException Download Failed due to source or destination unavailability
+   */
+  public Modpack downloadAll() throws IOException {
+    FileUtils.forceMkdir(new File("cache/"));
 
-    public Resource getLogo() {
-        return logo;
-    }
-
-    public Resource getBackground() {
-        return background;
-    }
-
-    public Solder getSolder() {
-        return solder;
-    }
-
-    public Discord getDiscordServerId() {
-        return discordServerId;
-    }
-
-    public HashMap<String, HashSet<String>> getModFiles() {
-        return modFiles;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public String getBuildInstalled() {
-        return buildInstalled;
-    }
-
-    //endregion
-
-    public void overrideMinecraft(String minecraft) {
-        this.minecraft = new MinecraftVerion(minecraft);
-    }
-
-    /**
-     * Add a mod to the internal List
-     * @param mod Mod to add
-     * @return this #SyntacticSugar
-     */
-    public Modpack addMod(Mod mod) {
-        mods.add(mod);
-        return this;
-    }
-
-    /**
-     * Download all Modpack files (Mods)
-     * @return this
-     * @throws IOException Download Failed due to source or destination unavailability
-     */
-    public Modpack downloadAll() throws IOException {
-        FileUtils.forceMkdir(new File("cache/"));
-
-        if (solder == null) {
-            if (state == State.INSTALLED_UPDATEABLE) {
-                modFiles.get("package").parallelStream().forEach(fn -> {
-                    try {
-                        Logging.logDebug("Deleting " + fn);
-                        FileUtils.forceDelete(new File(fn));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Logging.logErr("could not delete " + fn);
-                    }
-                });
-            }
-            Downloader.downloadFile(url, "cache/package.zip");
-            buildInstalled = version;
-        } else {
-            downloadAllViaSolder();
-        }
-        return this;
-    }
-
-    /**
-     * Download the Modpack via the Solder API
-     * @throws IOException Download Failed due to source or destination unavailability
-     */
-    private void downloadAllViaSolder() throws IOException{
-        HashSet<Mod> modsToDownload;
-        if (state == State.INSTALLED_UPDATEABLE) {
-            modsToDownload = new HashSet<>();
-
-            HashSet<Mod> oldMods = new HashSet<>(mods);
-            mods = new HashSet<>();
-            solder.initMods(this);
-
-            HashSet<Mod> modsToClear = new HashSet<>();
-
-            Logging.logDebug("Searching for updated or removed mods");
-
-            // find updated mods, we need to download
-            modsToDownload.addAll(oldMods.stream().filter(
-                    oldMod -> mods.stream().anyMatch(
-                            mod -> oldMod.getName().equals(mod.getName()) &&
-                                    !oldMod.getVersion().equals(mod.getVersion()))).collect(Collectors.toSet()));
-            // we need to clear updated mods too
-            modsToClear.addAll(modsToDownload);
-
-            // find mods removed, as they need to be cleared (obviously)
-            modsToClear.addAll(oldMods.stream().filter(
-                    oldMod -> mods.stream().noneMatch(
-                            mod -> oldMod.getName().equals(mod.getName())
-                    )).collect(Collectors.toSet()));
-
-            // obviously we also need to download newly added mods
-            modsToDownload.addAll(mods.stream().filter(
-                    mod -> oldMods.stream().noneMatch(
-                            oldMod -> oldMod.getName().equals(mod.getName())
-                    )).collect(Collectors.toSet()));
-
-            Logging.logDebug("Found " + modsToClear.size() + " updated or removed mods");
-            Logging.logDebug("Starting to clean mod for update");
-
-            modsToClear.parallelStream().forEach(modToClear -> {
-                modFiles.get(modToClear.getName()).parallelStream().forEach(file -> {
-                    try {
-                        Logging.logDebug("Deleting " + file);
-                        FileUtils.forceDelete(new File(file));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Logging.logErr("could not delete " + file + " from mod " + modToClear.getName());
-                    }
-                });
-                // we ne to remove the mod from the fileset, as it not part of the installation anymore
-                modFiles.remove(modToClear.getName());
-            });
-        } else {
-            modsToDownload = new HashSet<>(mods);
-        }
-        modsToDownload.parallelStream().forEach(mod -> {
-            try {
-                mod.download();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Logging.logErr("Could not download mod " + mod.getName());
-            }
+    if (solder == null) {
+      if (state == State.INSTALLED_UPDATEABLE) {
+        modFiles.get("package").parallelStream().forEach(fn -> {
+          try {
+            Logging.logDebug("Deleting " + fn);
+            FileUtils.forceDelete(new File(fn));
+          } catch (IOException e) {
+            e.printStackTrace();
+            Logging.logErr("could not delete " + fn);
+          }
         });
-        buildInstalled = solder.parseBuild(UserConfig.getBuild(), this);
+      }
+      Downloader.downloadFile(url, "cache/package.zip");
+      buildInstalled = version;
+    } else {
+      downloadAllViaSolder();
+    }
+    return this;
+  }
+
+  /**
+   * Download the Modpack via the Solder API.
+   * @throws IOException Download Failed due to source or destination unavailability
+   */
+  private void downloadAllViaSolder() throws IOException {
+    HashSet<Mod> modsToDownload;
+    if (state == State.INSTALLED_UPDATEABLE) {
+      modsToDownload = new HashSet<>();
+
+      mods = new HashSet<>();
+      solder.initMods(this);
+
+      HashSet<Mod> modsToClear = new HashSet<>();
+      HashSet<Mod> oldMods = new HashSet<>(mods);
+
+      Logging.logDebug("Searching for updated or removed mods");
+
+      // find updated mods, we need to download
+      modsToDownload.addAll(oldMods.stream().filter(
+          oldMod -> mods.stream().anyMatch(
+              mod -> oldMod.getName().equals(mod.getName())
+                  && !oldMod.getVersion().equals(mod.getVersion()))).collect(Collectors.toSet()));
+      // we need to clear updated mods too
+      modsToClear.addAll(modsToDownload);
+
+      // find mods removed, as they need to be cleared (obviously)
+      modsToClear.addAll(oldMods.stream().filter(
+          oldMod -> mods.stream().noneMatch(
+              mod -> oldMod.getName().equals(mod.getName())
+          )).collect(Collectors.toSet()));
+
+      // obviously we also need to download newly added mods
+      modsToDownload.addAll(mods.stream().filter(
+          mod -> oldMods.stream().noneMatch(
+              oldMod -> oldMod.getName().equals(mod.getName())
+          )).collect(Collectors.toSet()));
+
+      Logging.logDebug("Found " + modsToClear.size() + " updated or removed mods");
+      Logging.logDebug("Starting to clean mod for update");
+
+      modsToClear.parallelStream().forEach(modToClear -> {
+        modFiles.get(modToClear.getName()).parallelStream().forEach(file -> {
+          try {
+            Logging.logDebug("Deleting " + file);
+            FileUtils.forceDelete(new File(file));
+          } catch (IOException e) {
+            e.printStackTrace();
+            Logging.logErr("could not delete " + file + " from mod " + modToClear.getName());
+          }
+        });
+        // we ne to remove the mod from the fileset,
+        // as it not part of the installation anymore
+        modFiles.remove(modToClear.getName());
+      });
+    } else {
+      modsToDownload = new HashSet<>(mods);
     }
 
-    /**
-     * Extract all downloaded Mod ZIPs. Must be called after {@link #downloadAll()}
-     * @return this
-     * @throws IOException Source File or Destination Path are unreadable/writeable
-     */
-    public Modpack extractAll() throws IOException {
-        if (solder != null) {
-            mods.parallelStream().forEach(mod -> {
-                try {
-                    mod.extract();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Logging.logErr("Failed unpacking " + mod.getName());
-                }
-                modFiles.put(mod.getName(), mod.getFileSet());
-            });
-            if (state == State.INSTALLED_UPDATEABLE) {
-                mods = new HashSet<>();
-                solder.initMods(this);
-            }
-        } else {
-            modFiles.put("package", Extractor.extractZip("cache/package.zip"));
+    modsToDownload.parallelStream().forEach(mod -> {
+      try {
+        mod.download();
+      } catch (IOException e) {
+        e.printStackTrace();
+        Logging.logErr("Could not download mod " + mod.getName());
+      }
+    });
+    buildInstalled = solder.parseBuild(UserConfig.getBuild(), this);
+  }
+
+  /**
+   * Extract all downloaded Mod ZIPs. Must be called after {@link #downloadAll()}
+   * @return this
+   * @throws IOException Source File or Destination Path are unreadable/writeable
+   */
+  public Modpack extractAll() throws IOException {
+    if (solder == null) {
+      modFiles.put("package", Extractor.extractZip("cache/package.zip"));
+    } else {
+      mods.parallelStream().forEach(mod -> {
+        try {
+          mod.extract();
+        } catch (IOException e) {
+          e.printStackTrace();
+          Logging.logErr("Failed unpacking " + mod.getName());
         }
-        state = State.INSTALLED_UPTODATE;
-        return this;
+        modFiles.put(mod.getName(), mod.getFileSet());
+      });
+      if (state == State.INSTALLED_UPDATEABLE) {
+        mods = new HashSet<>();
+        solder.initMods(this);
+      }
+    }
+    state = State.INSTALLED_UPTODATE;
+    return this;
+  }
+
+  /**
+   * Check and Update the internal State.
+   * Called by TechnicApi#main(String[]) when modpack.state file found
+   * @param jsonStream Current JSOn from the API
+   * @throws IOException fired by Malformed URLs
+   */
+  public void update(InputStream jsonStream) throws IOException {
+    if (state == null || state == State.NOT_INSTALLED) {
+      throw new IllegalStateException();
     }
 
-    /**
-     * Check and Update the internal State. Called by TechnicAPI#main(String[]) when modpack.state file found
-     * @param jsonStream Current JSOn from the API
-     * @throws IOException fired by Malformed URLs
-     */
-    public void update(InputStream jsonStream) throws IOException {
-        if (state == null || state == State.NOT_INSTALLED) {
-            throw new IllegalStateException();
-        }
-
-        initSome(Json.createReader(jsonStream).readObject());
-        if (((solder == null) && !(buildInstalled.equals(version))) ||
-                ((solder != null) && !buildInstalled.equals(solder.parseBuild(UserConfig.getBuild(), this)))) {
-            state = State.INSTALLED_UPDATEABLE;
-        } else {
-            state = State.INSTALLED_UPTODATE;
-        }
+    initSome(Json.createReader(jsonStream).readObject());
+    if ((solder == null && !buildInstalled.equals(version))
+        || (solder != null
+          && !buildInstalled.equals(solder.parseBuild(UserConfig.getBuild(), this)))) {
+      state = State.INSTALLED_UPDATEABLE;
+    } else {
+      state = State.INSTALLED_UPTODATE;
     }
+  }
 
-    /**
-     * Internal State Hack :)
-     */
-    public enum State implements Serializable{
-        NOT_INSTALLED,
-        INSTALLED_UPTODATE,
-        INSTALLED_UPDATEABLE
-    }
+  /**
+   * Internal State Hack :).
+   */
+  public enum State implements Serializable {
+    NOT_INSTALLED,
+    INSTALLED_UPTODATE,
+    INSTALLED_UPDATEABLE;
+
+    public static final long serialVersionUID = 201709051908L;
+  }
 }

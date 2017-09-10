@@ -5,6 +5,7 @@ import de.beckerdd.bennet.minecraft.technicserver.technic.Modpack;
 import de.beckerdd.bennet.minecraft.technicserver.util.Logging;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,66 +32,60 @@ import java.util.Date;
  */
 
 /**
- * Main Class. Containing the Programs entry point
+ * Main Class. Containing the Programs entry point.
  */
 public final class Main {
+  /**
+   * This is the Main Class.
+   */
+  private Main() { }
 
-    /**
-     * This is the Main Class!
-     */
-    private Main() {}
+  /**
+   * Main entry Point.
+   * @param args Commandline Arguments
+   */
+  public static void main(String[] args) throws IOException, InterruptedException {
+    Logging.plainPrintln(
+        "This is free software, and you are welcome to redistribute it under certain conditions;\n"
+            + "technicserver  Copyright (C) 2017  Bennet Becker <bennet@becker-dd.de>\n"
+            + "This program comes with ABSOLUTELY NO WARRANTY;\n"
+            + "See https://github.com/bennet0496/technicserver for more details\n" + "\n");
 
-    /**
-     * Main entry Point.
-     * @param args Commandline Arguments
-     */
-    public static void main(String[] args) {
-        Logging.plainPrintln("technicserver  Copyright (C) 2017  Bennet Becker <bennet@becker-dd.de>\n" +
-                "This program comes with ABSOLUTELY NO WARRANTY;\n" +
-                "This is free software, and you are welcome to redistribute it under certain conditions;\n\n" +
-                "See https://github.com/bennet0496/technicserver for more details\n\n");
-
-        try {
-            if (UserConfig.getUrl().equalsIgnoreCase("")) {
-                Logging.logErr("No Modpack configured! Please edit modpack.properties and restart.");
-                System.exit(1);
-            }
-
-            Date startTime = new Date();
-
-            TechnicAPI technicAPI = new TechnicAPI(UserConfig.getUrl());
-
-            if (technicAPI.getModpack().getState() == Modpack.State.INSTALLED_UPTODATE) {
-                Logging.log("Modpack is upto-date");
-            } else {
-                technicAPI.updatePack(Arrays.stream(args).anyMatch(a -> a.equalsIgnoreCase("update")));
-            }
-
-            technicAPI.saveState();
-
-            technicAPI.runAnalytics(Double.toString(
-                            (startTime.getTime() - (new Date()).getTime()) / 1000
-                    ));
-
-
-            ArrayList<String> modpackStartArguments = new ArrayList<>();
-            modpackStartArguments.add("java");
-            modpackStartArguments.addAll(UserConfig.getJavaArgs());
-            modpackStartArguments.add("-jar");
-            modpackStartArguments.add("modpack.jar");
-            modpackStartArguments.add("nogui");
-
-            ProcessBuilder modpackProcessTpl = new ProcessBuilder(modpackStartArguments);
-            modpackProcessTpl.redirectErrorStream(true);
-            modpackProcessTpl.directory(new File("."));
-            modpackProcessTpl.inheritIO();
-
-            Process modpackProcess = modpackProcessTpl.start();
-            modpackProcess.waitFor();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+    if (UserConfig.getUrl().equalsIgnoreCase("")) {
+      Logging.logErr("No Modpack configured! Please edit modpack.properties and restart.");
+      System.exit(1);
     }
+
+    Date startTime = new Date();
+
+    TechnicApi technicApi = new TechnicApi(UserConfig.getUrl());
+
+    if (technicApi.getModpack().getState() == Modpack.State.INSTALLED_UPTODATE) {
+      Logging.log("Modpack is upto-date");
+    } else {
+      technicApi.updatePack(Arrays.stream(args).anyMatch(a -> a.equalsIgnoreCase("update")));
+    }
+
+    technicApi.saveState();
+
+    technicApi.runAnalytics(Double.toString(
+        (startTime.getTime() - (new Date()).getTime())
+    ));
+
+
+    ArrayList<String> modpackStartArguments = new ArrayList<>();
+    modpackStartArguments.add("java");
+    modpackStartArguments.addAll(UserConfig.getJavaArgs());
+    modpackStartArguments.add("-jar");
+    modpackStartArguments.add("modpack.jar");
+    modpackStartArguments.add("nogui");
+
+    ProcessBuilder modpackProcessTpl = new ProcessBuilder(modpackStartArguments);
+    modpackProcessTpl.redirectErrorStream(true);
+    modpackProcessTpl.directory(new File("."));
+    modpackProcessTpl.inheritIO();
+
+    Process modpackProcess = modpackProcessTpl.start();
+    modpackProcess.waitFor();
+  }
 }

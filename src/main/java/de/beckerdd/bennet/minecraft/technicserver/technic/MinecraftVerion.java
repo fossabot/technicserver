@@ -29,62 +29,73 @@ import java.util.regex.Pattern;
  */
 
 /**
- * Represent the Minecraft Version in very fancy manner
+ * Represent the Minecraft Version in very fancy manner.
  */
 public class MinecraftVerion implements Serializable {
-    /**
-     * Major Version part. E.g. 7 if MC Version is 1.7.X
-     */
-    private int major;
-    /**
-     * Minor Version part. E.g. 10 if MC Version is 1.7.10
-     */
-    private int minor;
 
-    /**
-     * Setup this very fancy class
-     * @param versionString original version string such as "1.7.10"
-     */
-    public MinecraftVerion(String versionString) {
-        String[] ver = versionString.split(Pattern.quote("."));
-        if (ver.length > 3 || ver.length < 2) {
-            throw new MalformedParametersException("Invalid Minecraft Version String");
-        }
-        major = Integer.parseInt(ver[1]);
-        try {
-            minor = Integer.parseInt(ver[2]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            minor = 0;
-        }
-    }
+  /**
+   * Serialization UID.
+   */
+  public static final long serialVersionUID = 201709051908L;
+  /**
+   * Major Version part. E.g. 7 if MC Version is 1.7.X
+   */
+  private int major;
+  /**
+   * Minor Version part. E.g. 10 if MC Version is 1.7.10
+   */
+  private int minor;
 
-    /**
-     * major getter
-     * @return major
-     */
-    public int getMajor() {
-        return major;
+  /**
+   * Setup this very fancy class.
+   * @param versionString original version string such as "1.7.10"
+   */
+  public MinecraftVerion(String versionString) {
+    String[] ver = versionString.split(Pattern.quote("."));
+    final int versionMaxLength = 3;
+    final int versionMinLength = 2;
+    if (ver.length > versionMaxLength || ver.length < versionMinLength) {
+      throw new MalformedParametersException("Invalid Minecraft Version String");
     }
+    major = Integer.parseInt(ver[1]);
+    try {
+      minor = Integer.parseInt(ver[2]);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      minor = 0;
+    }
+  }
 
-    /**
-     * minor getter
-     * @return minor
-     */
-    public int getMinor() {
-        return minor;
-    }
+  /**
+   * major getter.
+   * @return major
+   */
+  public int getMajor() {
+    return major;
+  }
 
-    public void download() throws IOException {
-        Downloader.downloadFile(
-                StaticConfig.MINECRAFT_JAR_PATTERN.replace("{MCVER}", this.toString()),
-                "minecraft_server" + toString() + ".jar");
-    }
+  /**
+   * minor getter.
+   * @return minor
+   */
+  public int getMinor() {
+    return minor;
+  }
 
-    /**
-     * give back the "original" version String
-     * @return version string
-     */
-    @Override public String toString() {
-        return minor == 0 ? "1." + major : "1." + major + "." + minor;
-    }
+  /**
+   * Download the minecraft_server.jar
+   * @throws IOException Download Failed for any reason
+   */
+  public void download() throws IOException {
+    Downloader.downloadFile(
+        StaticConfig.MINECRAFT_JAR_PATTERN.replace("{MCVER}", toString()),
+        "minecraft_server" + toString() + ".jar");
+  }
+
+  /**
+   * give back the "original" version String.
+   * @return version string
+   */
+  @Override public String toString() {
+    return minor == 0 ? "1." + major : "1." + major + "." + minor;
+  }
 }
