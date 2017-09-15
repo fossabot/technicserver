@@ -22,7 +22,6 @@ import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
 import org.apache.commons.io.FileUtils;
 import org.piwik.java.tracking.CustomVariable;
 import org.piwik.java.tracking.PiwikRequest;
@@ -67,7 +66,7 @@ public class TechnicApi {
   public TechnicApi(String apiUrl) throws IOException {
     File state;
 
-    URL url = new URL(apiUrl + "?build=349");
+    URL url = new URL(apiUrl + "?build=" + StaticConfig.LAUNCHER_BUILD_ID);
     Logging.log("Starting parse " + url);
 
     URLConnection conn = url.openConnection();
